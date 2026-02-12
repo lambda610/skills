@@ -1,142 +1,411 @@
 # DeepWiki Generate Guide
 
-Use this guide when generating comprehensive documentation for a codebase.
+Use this guide when generating comprehensive, professional documentation.
 
-## Generate Workflow
+## Philosophy
 
-### Step 1: Full Scan
+**Good documentation tells a story.** It explains not just what the code does, but why it does it and how to use it.
 
-First, understand the complete codebase:
-- List all source files
-- Identify main modules
-- Find public APIs
-- Map dependencies
+## Documentation Sections
 
-### Step 2: Analyze Each Section
+### 1. Project Overview
+The "电梯演讲" - can you explain this project in 2-3 sentences?
 
-#### Architecture Overview
-- System design principles
-- Component responsibilities
-- Data flow patterns
-- Design decisions made
+### 2. Architecture
+High-level design, components, and how they interact
 
-#### API Reference
-- Public functions and signatures
-- Classes and methods
-- Data types and interfaces
-- Error handling
+### 3. API Reference
+Complete function/class signatures with descriptions
 
-#### Module Breakdown
-- Each module's purpose
-- Files included
-- Exports and public API
-- Dependencies
+### 4. Module Guide
+How to use and extend different parts
 
-#### Code Patterns
-- Architectural patterns used
-- Common conventions
-- Design patterns
+### 5. Data Reference
+Types, schemas, and data contracts
 
-### Step 3: Generate Documentation Files
+### 6. Cookbook
+Common tasks and how to accomplish them
 
-Create these files in `docs/` directory:
+## Detailed Templates
 
-1. `README.md` - Project overview
-2. `ARCHITECTURE.md` - System design
-3. `API.md` - API reference
-4. `MODULES.md` - Module breakdown
-5. `FILE_INVENTORY.md` - Complete list
-
-## Documentation Templates
-
-### Architecture Section
+### Project Overview Template
 
 ```markdown
-## Architecture
+# [Project Name]
 
-### High-Level Design
-[Brief system description]
+## One-Liner
+[One sentence describing the project]
 
-### Components
-| Component | Responsibility | Dependencies |
-|-----------|---------------|--------------|
-| [Name] | [What it does] | [Depends on] |
+## Extended Description
 
-### Data Flow
-[How data moves through the system]
+### What It Does
+[Brief explanation of core functionality]
+
+### Why It Exists
+[Problem it solves]
+
+### Key Features
+- [Feature 1]: [Brief description]
+- [Feature 2]: [Brief description]
+- [Feature 3]: [Brief description]
+
+## Quick Start
+
+### Installation
+```bash
+[Installation commands]
 ```
 
-### API Section
+### Basic Usage
+```[language]
+[Minimal working example]
+```
+
+## Project Status
+- 🟢 Active / 🔴 Archived / 🟡 Maintenance
+- Last updated: [Date]
+- [Additional status info]
+```
+
+### Architecture Template
 
 ```markdown
-## API Reference
+# Architecture
 
-### Functions
+## High-Level Overview
 
-#### functionName
-
-**Signature:**
-```typescript
-function functionName(param: Type): ReturnType
+```
+[System diagram - ASCII or mermaid]
 ```
 
-**Location:** `src/path/file.ts`
+## Core Components
 
-**Description:**
-[Brief description]
+### [Component 1]
+
+**Purpose:** [What problem it solves]
+
+**Responsibilities:**
+- [Responsibility 1]
+- [Responsibility 2]
+
+**Dependencies:**
+- [Component 2] - [Relationship]
+- [External Lib] - [Purpose]
+
+**Located:** `src/path/component.ts`
+
+### [Component 2]
+
+**Purpose:** [What problem it solves]
+
+...
+
+## Data Flow
+
+### [Flow Name]
+
+```
+[Step 1] → [Step 2] → [Step 3]
+```
+
+**Description:** [How this flow works]
+
+## Architectural Decisions
+
+| Decision | Context | Chosen Solution | Rationale |
+|----------|---------|-----------------|-----------|
+| [ADR-001] | [Problem] | [Solution] | [Why this over alternatives?] |
+
+See [Architecture Decision Records](ADR.md) for details.
+
+## Security
+
+- [Security consideration 1]
+- [Security consideration 2]
+
+## Scalability
+
+- [Scaling approach 1]
+- [Scaling approach 2]
+```
+
+### API Reference Template
+
+```markdown
+# API Reference
+
+## Getting Started
+
+### Base URL
+```
+https://api.example.com/v1
+```
+
+### Authentication
+All API requests require:
+```http
+Authorization: Bearer <token>
+```
+
+## Endpoints
+
+### GET /resource
+
+**Description:** Retrieves a list of resources.
 
 **Parameters:**
-| Name | Type | Description |
-|------|------|-------------|
-| param | Type | [Description] |
 
-**Returns:** [What it returns]
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| limit | integer | No | Max items (default: 20) |
+| offset | integer | No | Pagination offset |
+
+**Response:**
+
+```json
+{
+  "data": [...],
+  "meta": {
+    "total": 100,
+    "limit": 20,
+    "offset": 0
+  }
+}
 ```
 
-### Modules Section
+**Errors:**
+
+| Code | Meaning |
+|------|---------|
+| 400 | Invalid parameters |
+| 401 | Unauthorized |
+| 404 | Resource not found |
+
+---
+
+## Classes
+
+### ClassName
+
+**Location:** `src/path/file.ts:42`
+
+**Purpose:** [What this class represents]
+
+#### Constructor
+
+```typescript
+new ClassName(config: ConfigOptions)
+```
+
+#### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| property | Type | What it holds |
+
+#### Methods
+
+##### methodName()
+
+```typescript
+async methodName(params: Params): Promise<Return>
+```
+
+**Purpose:** [What this method does]
+
+**Parameters:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| input | Type | [Description] |
+
+**Returns:** [What's returned]
+
+**Throws:**
+- `ErrorType` - When [condition]
+
+**Example:**
+```typescript
+[Usage example]
+```
+
+---
+
+## Type Definitions
+
+```typescript
+// Domain types used throughout the API
+
+interface DomainType {
+  id: string;
+  name: string;
+  createdAt: Date;
+}
+```
+
+### Module Template
 
 ```markdown
-## Modules
+# [Module Name]
 
-### Module: [Name]
+## Overview
 
-**Purpose:** [What the module does]
+**Purpose:** [What this module provides]
 
-**Files:**
-| File | Purpose |
-|------|---------|
-| [File] | [Description] |
+**Location:** `src/module/`
 
 **Exports:**
+
+| Export | Type | Description |
+|--------|------|-------------|
+| `exportName` | function | [Description] |
+
+## Installation
+
+```bash
+[Installation if separate]
+```
+
+## Usage
+
+### Basic Example
+
 ```typescript
-export { Function } from './file';
+import { exportName } from 'module';
+
+const result = exportName({
+  // Options
+});
 ```
 
-**Dependencies:** [Related modules]
+### Advanced Usage
+
+```typescript
+[More complex example]
 ```
 
-## Best Practices
+## API
 
-- Use tables for structured data
-- Include code examples
-- Link related components
-- Focus on public APIs
-- Be consistent with formatting
-- Don't document private internals
+### `exportName(options)`
 
-## Output Summary
+**Purpose:** [What it does]
 
-When done, provide a summary:
+**Parameters:**
+
+| Param | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| option1 | string | Yes | - | [Description] |
+| option2 | number | No | 10 | [Description] |
+
+**Returns:** `ReturnType` - [What it returns]
+
+**Example:**
+
+```typescript
+[Working example]
+```
+
+## Recipes
+
+### How to: [Common Task 1]
+
+```typescript
+[Code example]
+```
+
+### How to: [Common Task 2]
+
+```typescript
+[Code example]
+```
+
+## Related
+- [Related module 1]
+- [Related module 2]
+```
+
+### Data Schema Template
 
 ```markdown
-## Documentation Generated
+# Data Reference
 
-- [x] README.md - Project overview
-- [x] ARCHITECTURE.md - System design
-- [x] API.md - API reference
-- [x] MODULES.md - Module breakdown
-- [x] FILE_INVENTORY.md - Complete file list
+## Overview
 
-Total files: [N]
-Lines of documentation: [N]
+This document describes the data types, schemas, and contracts used in the project.
+
+## Domain Types
+
+### User
+
+```typescript
+interface User {
+  /** Unique identifier */
+  id: string;
+  
+  /** User's display name */
+  name: string;
+  
+  /** Email address */
+  email: string;
+  
+  /** ISO 8601 timestamp */
+  createdAt: string;
+  
+  /** User's role */
+  role: 'admin' | 'user' | 'guest';
+}
+```
+
+### [Other Types]
+
+```typescript
+[Type definitions]
+```
+
+## Validation Rules
+
+| Field | Rule | Error Message |
+|-------|------|---------------|
+| email | email() | Must be a valid email |
+| password | min(8) | Must be at least 8 characters |
+
+## Data Flow
+
+```
+[User Input] → [Validation] → [Transformation] → [Storage] → [Response]
+```
+
+## Migrations
+
+### Version 1 → 2
+
+Changes:
+- Added `email` field
+- Renamed `userName` → `name`
+```
+
+## Documentation Quality Checklist
+
+- [ ] All public APIs documented
+- [ ] Code examples included and tested
+- [ ] Error conditions documented
+- [ ] Type signatures accurate
+- [ ] Cross-references added
+- [ ] "Why" explained, not just "what"
+- [ ] Common use cases covered
+- [ ] Related resources linked
+
+## Output Structure
+
+```
+docs/
+├── README.md              # Project overview + quick start
+├── ARCHITECTURE.md        # System design + components
+├── API.md                 # Complete API reference
+├── MODULES.md             # Module guides + recipes
+├── DATA.md               # Data schemas + types
+├── TUTORIAL.md           # Step-by-step guides
+└── reference/
+    ├── ADR.md            # Architecture decisions
+    └── glossary.md       # Term definitions
 ```
