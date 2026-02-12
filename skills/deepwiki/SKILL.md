@@ -81,7 +81,7 @@ See [GENERATE_GUIDE.md](references/GENERATE_GUIDE.md) for documentation template
 ## Output Structure
 
 ```
-docs/
+docs/deepwiki/
 ├── README.md              # Project overview + quick start
 ├── ARCHITECTURE.md        # System design + components
 ├── API.md                 # Complete API reference
