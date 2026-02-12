@@ -13,113 +13,73 @@ Analyze codebase structure and generate overview documentation.
 
 ### 1. Directory Analysis
 
-```markdown
-## Directory Structure
-
-```
-[project-root]/
-├── src/                  # Source code
-├── tests/                # Test files
-├── docs/                 # Documentation
-├── config/               # Configuration
-└── [other dirs]
-```
-
-**Output:**
-- Tree structure visualization
-- Directory purposes
-- Key entry points
-```
+1. List directory structure recursively (max depth 3-4)
+2. Identify key directories (src/, tests/, docs/, config/)
+3. Find entry points (main.ts, index.js, App.tsx)
+4. Note build and config files
 
 ### 2. Technology Detection
 
-Identify technologies used:
-
-```markdown
-## Technology Stack
-
-| Layer | Technology | Evidence |
-|-------|------------|----------|
-| Language | TypeScript | tsconfig.json |
-| Framework | React | package.json, react |
-| Build | Vite | vite.config.ts |
-| Testing | Vitest | vitest.config.ts |
-```
+Look for indicators:
+- `package.json` / `requirements.txt` → Node.js / Python
+- `tsconfig.json` → TypeScript
+- `pyproject.toml` / `setup.py` → Python
+- `go.mod` → Go
+- `Cargo.toml` → Rust
+- `pom.xml` / `build.gradle` → Java
 
 ### 3. File Inventory
 
-List all important files:
-
-```markdown
-## Key Files
-
-| File | Purpose | Lines |
-|------|---------|-------|
-| src/main.ts | Entry point | 50 |
-| src/App.tsx | Main component | 200 |
-| src/api/client.ts | API client | 150 |
-```
+List important files:
+- Entry points
+- Configuration files
+- Main components
+- Test files
 
 ### 4. Entry Points Discovery
 
 Identify where the app starts:
-
-```markdown
-## Entry Points
-
-- **Main:** src/main.ts
-- **Tests:** src/**/*.test.ts
-- **Config:** vite.config.ts, tsconfig.json
-```
+- `src/main.ts` / `index.js` → Main entry
+- `src/App.tsx` / `App.vue` → Root component
+- `config/` → Configuration files
 
 ## Output Template
 
-```markdown
+Create a comprehensive overview document:
+
+```
 # [Project Name] - Codebase Overview
 
 ## Quick Summary
-
 Brief description of the project.
 
 ## Technology Stack
-
-- **Frontend:** [Tech]
-- **Backend:** [Tech]
-- **Database:** [Tech]
-- **Build Tool:** [Tech]
-- **Testing:** [Tech]
+- **Language:** [TypeScript/Python/etc.]
+- **Framework:** [React/Express/Django/etc.]
+- **Build:** [Vite/Webpack/etc.]
+- **Testing:** [Jest/Vitest/etc.]
 
 ## Directory Structure
-
-```
-[Tree]
-```
+[Tree structure]
 
 ## Key Components
-
 | Component | Path | Purpose |
 |-----------|------|---------|
-| [Name] | [Path] | [Description] |
+| [Name] | src/[path] | [Description] |
 
 ## Entry Points
-
-- [File]: [Purpose]
-- [File]: [Purpose]
+- **Main:** [File] - [Purpose]
+- **Config:** [Files]
 
 ## Dependencies
-
-- **Internal:** [List]
-- **External:** [List]
+- **Internal:** [Key modules]
+- **External:** [Key packages]
 
 ## File Count
-
-- Total files: [N]
-- Code files: [N]
-- Test files: [N]
-- Config files: [N]
+- Total: [N] files
+- Code: [N] | Tests: [N] | Config: [N]
 
 ## Next Steps
-
 - [ ] Generate detailed API docs
 - [ ] Create module breakdown
 - [ ] Document architecture
@@ -127,31 +87,25 @@ Brief description of the project.
 
 ## Example
 
-### Input
-
+**Input:**
 ```
 /deepwiki-scan ./my-project
 ```
 
-### Output
-
-```markdown
+**Output:**
+```
 # My Project - Codebase Overview
 
 ## Quick Summary
-
 A React-based web application for task management.
 
 ## Technology Stack
-
 - **Frontend:** React 18, TypeScript
 - **Build:** Vite
 - **Testing:** Vitest
 - **Styling:** TailwindCSS
 
 ## Directory Structure
-
-```
 my-project/
 ├── src/
 │   ├── components/
@@ -162,20 +116,21 @@ my-project/
 ├── tests/
 ├── config/
 └── package.json
-```
 
-...
+## Key Components
+| Component | Path | Purpose |
+|-----------|------|---------|
+| App | src/App.tsx | Root component |
+| API | src/api/client.ts | API client |
 
 ## Next Steps
-
 - [ ] Generate detailed API docs
-- [ ] Create module breakdown
 ```
 
 ## Usage
 
 ```bash
-/deepwiki-scan [path] --depth=[full|medium|shallow] --ignore=[patterns]
+/deepwiki-scan [path] --depth=[full|medium|shallow]
 ```
 
 ## Output Location
