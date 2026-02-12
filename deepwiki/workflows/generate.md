@@ -13,107 +13,38 @@ Generate comprehensive documentation for a codebase.
 
 ### 1. Architecture Documentation
 
-```markdown
-# [Project] Architecture
-
-## System Overview
-
-Brief description of the system and its purpose.
-
-## High-Level Architecture
-
-```
-[Architecture Diagram]
-```
-
-## Components
-
-| Component | Responsibility | Dependencies |
-|-----------|---------------|--------------|
-| [Name] | [What it does] | [Depends on] |
-```
+Create architecture section with:
+- System overview
+- Component breakdown
+- Data flow patterns
+- Design decisions
 
 ### 2. API Documentation
 
-```markdown
-# [Project] API Reference
-
-## Endpoints
-
-| Method | Path | Description | Request | Response |
-|--------|------|------------|---------|----------|
-| GET | /api/users | List users | - | [User[]] |
-| POST | /api/users | Create user | UserCreate | User |
-
-## Data Types
-
-```typescript
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-```
-
-## Error Codes
-
-| Code | Meaning |
-|------|---------|
-| 400 | Bad Request |
-| 401 | Unauthorized |
-| 404 | Not Found |
-```
+Document all public APIs:
+- Endpoints/functions
+- Request/response formats
+- Data types and interfaces
+- Error handling
 
 ### 3. Module Breakdown
 
-```markdown
-# Modules
-
-## Module: [Name]
-
-### Purpose
-[What the module does]
-
-### Files
-
-| File | Purpose |
-|------|---------|
-| [File] | [Description] |
-
-### Exports
-
-```typescript
-export { Function } from './file';
-export class Class { ... }
-```
-
-### Dependencies
-- [Module A]
-- [Module B]
-```
+For each module:
+- Purpose and responsibilities
+- Files included
+- Public exports
+- Dependencies
 
 ### 4. File Documentation
 
-For each important file:
-
-```markdown
-## [filename.ext]
-
-**Path:** `src/path/to/file.ext`
-
-**Purpose:** [What this file does]
-
-**Key Functions/Classes:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| [Name] | function | [Description] |
-
-**Related Files:**
-- [Related] - [Why related]
-```
+For key files:
+- Location and purpose
+- Key functions/classes
+- Related files
 
 ## Output Structure
+
+Generate these files in `docs/deepwiki/`:
 
 ```
 docs/deepwiki/
@@ -130,35 +61,24 @@ docs/deepwiki/
 
 ## Example
 
-### Input
-
+**Input:**
 ```
 /deepwiki-generate --output=docs --depth=full
 ```
 
-### Generated Structure
-
+**Generated Structure:**
 ```
 docs/deepwiki/
 ├── README.md
 │   # Project: MyApp
 │   # A React task manager
-│   
 │   ## Quick Links
 │   - [Architecture](ARCHITECTURE.md)
 │   - [API Reference](API.md)
 │   - [Modules](MODULES.md)
-│
 ├── ARCHITECTURE.md
-│   # High-level design
-│   # Components and interactions
-│
 ├── API.md
-│   # All endpoints
-│   # Data types
-│
 └── MODULES.md
-    # All modules documented
 ```
 
 ## Configuration Options
@@ -195,13 +115,12 @@ generate:
 
 ## Tips
 
-1. **Run `/deepwiki-scan` first** for better results
-2. **Focus on public APIs** — private details optional
-3. **Use code examples** — explain with context
-4. **Link related modules** — show relationships
-5. **Update iteratively** — docs improve with use
+1. Run `/deepwiki-scan` first for better results
+2. Focus on public APIs — private details optional
+3. Use code examples — explain with context
+4. Link related modules — show relationships
+5. Update iteratively — docs improve with use
 
 ## Output Location
 
 Default: `docs/deepwiki/` directory
-Custom: Specify with `--output`
