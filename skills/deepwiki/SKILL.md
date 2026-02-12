@@ -1,6 +1,6 @@
 ---
 name: deepwiki
-description: AI-powered local codebase documentation generator. Use for: (1) Scanning codebase structure, (2) Generating comprehensive documentation, (3) Creating API references and architecture diagrams, (4) Analyzing code organization and dependencies.
+description: "AI-powered local codebase documentation generator. Use for: (1) Scanning codebase structure, (2) Generating comprehensive documentation, (3) Creating API references and architecture diagrams, (4) Analyzing code organization and dependencies."
 ---
 
 # DeepWiki — Local Codebase Documentation Generator
