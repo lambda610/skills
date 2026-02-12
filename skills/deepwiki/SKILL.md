@@ -43,25 +43,30 @@ DeepWiki will read your actual code, not just filenames, to create comprehensive
 
 ## OpenClaw Usage
 
-### Quick Scan
-```
-/deepwiki-scan [project-path]
-```
-Deep analysis: file content, business logic, patterns
+### Commands
 
-### Full Documentation
 ```
-/deepwiki-generate
+/deepwiki-scan [project-path]     # Deep code analysis
+/deepwiki-generate                # Full documentation
+/deepwiki-api                     # API reference only
+/deepwiki-architecture            # Architecture docs only
+/deepwiki-modules                 # Module guides only
+/deepwiki-data                    # Data schemas only
 ```
-Complete docs: architecture + API + modules + data + cookbook
 
-### Specific Focus
+## Claude Code Usage
+
+Simply describe what you need (no commands needed):
+
+```bash
+"Scan this codebase structure and extract business logic"
+"Generate complete documentation with API reference"
+"Document the architecture and design patterns"
+"Create module guides with usage examples"
+"Analyze data types and validation rules"
 ```
-/deepwiki-api              # API reference only
-/deepwiki-architecture     # Architecture docs only
-/deepwiki-modules         # Module guides only
-/deepwiki-data            # Data schemas only
-```
+
+The skill triggers on keywords from the description above.
 
 ## For Detailed Guidance
 
