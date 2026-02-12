@@ -1,0 +1,17 @@
+{
+  "name": "deepwiki",
+  "version": "1.0.0",
+  "description": "Local codebase documentation generator - AI-powered documentation from code",
+  "keywords": ["documentation", "wiki", "code-analysis", "docs", "api-reference"],
+  "author": "Lambda610",
+  "license": "MIT",
+  "openclaw": {
+    "skills": {
+      "deepwiki": {
+        "name": "DeepWiki",
+        "version": "1.0.0",
+        "description": "AI-powered local documentation generator"
+      }
+    }
+  }
+}
