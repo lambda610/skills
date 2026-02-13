@@ -1,0 +1,15 @@
+name: system
+description: 优化系统提示词 - 将简单的角色描述转化为结构化的系统提示词
+arguments:
+  - name: role
+    type: string
+    required: true
+    description: 角色描述
+  - name: capabilities
+    type: string
+    required: false
+    description: 能力要求
+    default: ""
+steps:
+  - run: echo
+    args: ["system: {{ args.role }}"]
