@@ -69,4 +69,4 @@ AI 提示词优化工具，帮助你编写高质量的提示词，提升 AI 输�
 
 ## Claude Code 参考
 
-当使用此 skill 时，Claude 会参考 prompts 目录下的提示词模板进行优化。
+当使用此 skill 时，Claude 会参考 resources 目录下的文档进行优化。
