@@ -1,0 +1,15 @@
+name: optimize
+description: 优化用户提示词 - 将模糊、简单的提示词转化为清晰、具体、有效的提示词
+arguments:
+  - name: prompt
+    type: string
+    required: true
+    description: 需要优化的原始提示词
+  - name: context
+    type: string
+    required: false
+    description: 额外上下文信息
+    default: ""
+steps:
+  - run: echo
+    args: ["optimize: {{ args.prompt }}"]

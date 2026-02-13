@@ -1,0 +1,14 @@
+name: evaluate
+description: 评估提示词质量 - 从清晰度、具体性、结构性三个维度评估并给出评分和改进建议
+arguments:
+  - name: original
+    type: string
+    required: true
+    description: 原始提示词
+  - name: optimized
+    type: string
+    required: true
+    description: 优化后提示词
+steps:
+  - run: echo
+    args: ["评估：\n原始：{{ args.original }}\n优化后：{{ args.optimized }}"]

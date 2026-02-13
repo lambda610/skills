@@ -1,0 +1,15 @@
+name: image
+description: 文生图提示词优化 - 将自然语言描述转化为高质量的图像生成提示词
+arguments:
+  - name: description
+    type: string
+    required: true
+    description: 图像描述
+  - name: style
+    type: string
+    required: false
+    description: 风格偏好
+    default: ""
+steps:
+  - run: echo
+    args: ["/image {{ args.description }}"]
