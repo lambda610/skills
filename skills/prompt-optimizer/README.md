@@ -14,9 +14,12 @@ This skill provides comprehensive prompt optimization capabilities directly with
 
 - **Zero Configuration** - Works out of the box without Python environments or API keys
 - **Conversational Interface** - Trigger optimization through natural language
+- **Guided Workflow** - Interactive step-by-step prompting with dynamic questions
+- **Reference Image Support** - Optimize prompts with image reference constraints
 - **Progressive Disclosure** - Detailed documentation available in references/ as needed
 - **Dual Platform Support** - Compatible with both OpenClaw and Claude Code (Agent Skills)
 - **Chinese Language Focus** - Optimized for Chinese prompt engineering
+- **Multi-Language Output** - Generate prompts in English or Chinese for different tools
 
 ## Supported Operations
 
@@ -32,26 +35,18 @@ This skill provides comprehensive prompt optimization capabilities directly with
 
 ## Quick Start
 
-```bash
-# User prompt optimization
-optimize: write an article for me
+### Interactive Mode (Recommended)
+```
+# Start guided workflow
+我想优化一个提示词
+
+# Or directly:
+optimize: write an article
 plan: create a travel plan
-professional: process this data
-
-# System prompt optimization
-system prompt: you are an assistant
-
-# Image optimization
 /image: a cute cat
-image2image: change the background to night scene
-
-# Evaluation
-evaluate:
-original prompt: write an article for me
-optimized prompt: write an article about AI development, 1000 words...
 ```
 
-## Trigger Keywords
+### Quick Commands
 
 | Feature | Keywords (Chinese) | Keywords (English) |
 |---------|-------------------|-------------------|
