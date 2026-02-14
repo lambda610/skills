@@ -1,0 +1,20 @@
+name: scan
+description: 分析代码库结构并生成概览文档
+arguments:
+  - name: path
+    type: string
+    description: 要分析的代码库路径（默认当前目录）
+    required: false
+    default: "."
+  - name: depth
+    type: string
+    description: 分析深度
+    required: false
+    default: "medium"
+    enum:
+      - shallow
+      - medium
+      - full
+steps:
+  - run: echo
+    args: ["请提供要分析的代码库路径（默认当前目录）："]

@@ -1,0 +1,21 @@
+name: generate
+description: 生成完整的代码库文档
+arguments:
+  - name: path
+    type: string
+    description: 代码库路径
+    required: false
+    default: "."
+  - name: output
+    type: string
+    description: 输出目录
+    required: false
+    default: "docs/deepwiki"
+  - name: include
+    type: string
+    description: 要包含的章节（architecture,api,modules,file-inventory,dependencies）
+    required: false
+    default: "all"
+steps:
+  - run: echo
+    args: ["请提供要生成文档的代码库路径："]

@@ -1,43 +1,23 @@
-# DeepWiki Skill for OpenClaw
+# DeepWiki Skill
 
 AI-powered local documentation generator.
 
-## Quick Start
+## Slash Command
 
-```bash
-/deepwiki-scan ./my-project
-/deepwiki-generate
-```
+`/deepwiki` - Invokes the skill (describe what you need, e.g., "scan my codebase" or "generate docs for this project")
 
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/deepwiki-scan` | Analyze codebase structure |
-| `/deepwiki-generate` | Generate full documentation |
-| `/deepwiki-api` | Document APIs only |
-
-## Files
+## Structure
 
 ```
 deepwiki/
-├── SKILL.md              # Main documentation
-├── package.json          # Metadata
-├── workflows/
-│   ├── scan.md           # Scan workflow
-│   └── generate.md        # Generate workflow
-└── prompts/
-    ├── architecture.md  # Architecture prompt
-    └── api.md            # API documentation prompt
+├── SKILL.md              # Main skill definition
+├── workflows/            # OpenClaw workflows
+├── prompts/              # Reference prompts
+└── references/           # Documentation
 ```
 
-## See Also
+## Note
 
-- [SKILL.md](SKILL.md) for full documentation
-- [workflows/](workflows/) for workflow guides
-- [prompts/](prompts/) for AI prompts
+Claude Code skills use the pattern `/<skill-name>` — one skill directory creates one slash command. Multiple commands require multiple skill directories.
 
-## Inspired by
-
-- DeepWiki (deepwiki.com)
-- Devin by CognitionAI
+For OpenClaw, multiple commands are supported via `workflows/*.yaml` files.
