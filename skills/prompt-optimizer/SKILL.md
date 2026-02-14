@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: "AI 提示词优化工具。支持：(1) 用户提示词优化（基础/规划/专业），(2) 系统提示词优化（通用/分析/格式），(3) 迭代改进，(4) 文生图/图生图优化，(5) 提示词评估，(6) 变量提取与生成。使用场景：优化模糊提示词、构建系统提示词、改进现有提示词、生成图像提示词、评估提示词质量、提取/生成变量。"
+description: "AI 提示词优化工具 (AI Prompt Optimization Tool). Supports: (1) User prompt optimization (basic/planning/professional), (2) System prompt optimization (general/analytical/format), (3) Iteration, (4) Text-to-image/image-to-image optimization, (5) Prompt evaluation, (6) Variable extraction and generation. Use for: optimizing vague prompts, building system prompts, improving existing prompts, generating image prompts, evaluating prompt quality, extracting/generating variables."
 metadata:
   {
     "openclaw": {
@@ -12,15 +12,18 @@ metadata:
 
 # Prompt Optimizer
 
-AI 提示词优化工具，基于 prompt-optimizer 项目内置模板。
+AI 提示词优化工具 / AI Prompt Optimization Tool
 
-## 快速开始
+Based on prompt-optimizer project built-in templates. 基于原版内置模板。
 
-### 触发方式
+## Quick Start / 快速开始
 
-**自动触发** - 描述需求即可：
+### 触发方式 / Triggers
+
+**中文**:
 ```
 优化：帮我写个文章
+规划：帮我做一个旅行计划
 系统提示词：你是一个助手
 /image 一只猫
 评估：
@@ -28,51 +31,56 @@ AI 提示词优化工具，基于 prompt-optimizer 项目内置模板。
 优化后提示词：xxx
 ```
 
-**命令触发** (OpenClaw)：
+**English**:
 ```
-/prompt-optimizer user <提示词>
-/prompt-optimizer system <提示词>
-/prompt-optimizer iterate <提示词>
-/prompt-optimizer image <描述>
+optimize: write an article for me
+plan: create a travel plan
+system prompt: you are an assistant
+/image a cute cat
+evaluate:
+original prompt: xxx
+optimized prompt: xxx
+```
+
+**Commands (OpenClaw)**:
+```
+/prompt-optimizer user <prompt>
+/prompt-optimizer system <prompt>
+/prompt-optimizer iterate <prompt>
+/prompt-optimizer image <description>
 /prompt-optimizer evaluate
 ```
 
-## 功能概览
+## 功能 / Features
 
-| 功能 | 模板数 | 说明 |
-|------|--------|------|
-| 用户提示词优化 | 6 | 基础/规划/专业 + 上下文版 |
-| 系统提示词优化 | 6 | 通用/分析/格式 + 上下文版 |
-| 迭代改进 | 3 | 通用/上下文/图像 |
-| 文生图优化 | 5 | 通用/中文/摄影/创意/JSON |
-| 图生图优化 | 3 | 通用/文案替换/JSON |
-| 提示词评估 | 20+ | 原始/优化后/对比/直接/迭代 |
-| 变量处理 | 2 | 提取/值生成 |
+| Category | 中文 | English | Templates |
+|----------|------|---------|-----------|
+| 用户提示词优化 | 用户提示词优化 | User Prompt Optimization | 6 |
+| 系统提示词优化 | 系统提示词优化 | System Prompt Optimization | 6 |
+| 迭代改进 | 迭代改进 | Iteration | 3 |
+| 文生图优化 | 文生图优化 | Text-to-Image | 5 |
+| 图生图优化 | 图生图优化 | Image-to-Image | 3 |
+| 提示词评估 | 提示词评估 | Prompt Evaluation | 20+ |
+| 变量处理 | 变量处理 | Variable Processing | 2 |
 
-详细模板列表见 [references/templates.md](references/templates.md)
+## References / 参考文档
 
-## 核心模板
+For detailed documentation, see:
 
-### 用户提示词优化
+### 中文文档
+- 完整模板列表: [references/templates.md](references/templates.md)
+- 用户优化: [references/user-optimize.md](references/user-optimize.md)
+- 系统优化: [references/system-optimize.md](references/system-optimize.md)
+- 图像优化: [references/image-optimize.md](references/image-optimize.md)
+- 迭代优化: [references/iterate.md](references/iterate.md)
+- 提示词评估: [references/evaluate.md](references/evaluate.md)
+- 变量处理: [references/variables.md](references/variables.md)
 
-详见 [references/user-optimize.md](references/user-optimize.md)
-
-### 系统提示词优化
-
-详见 [references/system-optimize.md](references/system-optimize.md)
-
-### 图像优化
-
-详见 [references/image-optimize.md](references/image-optimize.md)
-
-### 迭代优化
-
-详见 [references/iterate.md](references/iterate.md)
-
-### 提示词评估
-
-详见 [references/evaluate.md](references/evaluate.md)
-
-### 变量处理
-
-详见 [references/variables.md](references/variables.md)
+### English Documentation
+- Complete Template List: [references/templates_en.md](references/templates_en.md)
+- User Optimization: [references/user-optimize_en.md](references/user-optimize_en.md)
+- System Optimization: [references/system-optimize_en.md](references/system-optimize_en.md)
+- Image Optimization: [references/image-optimize_en.md](references/image-optimize_en.md)
+- Iteration: [references/iterate_en.md](references/iterate_en.md)
+- Evaluation: [references/evaluate_en.md](references/evaluate_en.md)
+- Variables: [references/variables_en.md](references/variables_en.md)
