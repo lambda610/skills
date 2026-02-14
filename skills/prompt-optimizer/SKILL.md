@@ -16,6 +16,43 @@ AI 提示词优化工具 / AI Prompt Optimization Tool
 
 Based on prompt-optimizer project built-in templates. 基于原版内置模板。
 
+## Guided Workflow / 引导式流程
+
+If you need guidance, you can follow this interactive process:
+
+### Step 1: Select Function / 选择功能
+```
+你想做什么？/ What would you like to do?
+- 优化提示词 (Optimize a prompt)
+- 评估提示词 (Evaluate a prompt)
+- 生成图像提示词 (Generate image prompt)
+```
+
+### Step 2: Input Information / 输入信息
+根据选择，收集必要信息：
+- 待优化的提示词
+- 使用场景
+- 特殊要求
+
+### Step 3: Optimization / 优化输出
+输出优化后的提示词
+
+### Example / 示例流程
+```
+用户: 我想优化一个提示词
+AI: 请问是哪种类型的提示词？
+  1. 用户提示词（日常使用）
+  2. 系统提示词（角色设定）
+  3. 图像提示词（AI绘画）
+  4. 评估对比
+
+用户: 1
+AI: 请提供需要优化的用户提示词
+
+用户: 帮我写个文章
+AI: [优化后...]
+```
+
 ## Quick Start / 快速开始
 
 ### 触发方式 / Triggers
