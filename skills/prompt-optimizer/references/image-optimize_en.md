@@ -4,9 +4,9 @@ Text-to-image and image-to-image prompt optimization.
 
 ## Text-to-Image Optimization (text2imageOptimize)
 
-### 1. General Natural Language
+### 1. General (通用)
 
-**Use Case**: Most image generation needs
+**Use Case**: Most image generation tools (Midjourney, Stable Diffusion, DALL-E, etc.)
 
 **Trigger**:
 ```
@@ -14,9 +14,37 @@ Text-to-image and image-to-image prompt optimization.
 image: futuristic city
 ```
 
+**Optimization Direction**:
+- Subject clarity
+- Action/State
+- Environment
+- Lighting
+- Color scheme
+- Material
+- Mood/Atmosphere
+- Composition
+
 ---
 
-### 2. Chinese Aesthetic
+### 2. Chinese Tools (中文工具)
+
+**Use Case**: Chinese image generation tools (即梦, 讯飞, etc.)
+
+**Trigger**:
+```
+/image 一只猫
+```
+
+**Output**: Chinese prompt optimized for tools with better Chinese semantic understanding
+
+**Example Output (Chinese)**:
+```
+一只可爱的银渐层猫，蓝眼睛，圆脸，坐在毛毯上，下午柔和自然光
+```
+
+---
+
+### 3. Chinese Aesthetic
 
 **Use Case**: Chinese context and cultural elements
 

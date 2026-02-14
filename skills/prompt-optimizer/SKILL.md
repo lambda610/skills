@@ -66,10 +66,12 @@ Ask based on template needs:
 - 目标模型: 用于哪个 AI?
 - 复杂度: 简单 / 详细 / 完整版?
 
-**图像提示词:**
-- 目标工具: Midjourney / DALL-E / Stable Diffusion / FLUX?
-- 风格: 写实 / 摄影 / 插画 / 3D?
-- 画面比例: 1:1 / 16:9 / 9:16?
+**图像提示词 / Image Prompt:**
+- 目标工具 / Target Tool: Midjourney / DALL-E / Stable Diffusion / FLUX / 即梦 (JM) / 其他
+- 风格 / Style: 写实 / 摄影 / 插画 / 3D / 其他
+- 画面比例 / Aspect Ratio: 1:1 / 16:9 / 9:16 / 其他
+- 参考图 / Reference Image: 是 (Yes) / 否 (No)
+  - 如果是: 参考图数量、具体约束（如：使用第一张图的产品）
 
 **迭代优化:**
 - 上次优化结果: [获取上次结果]
