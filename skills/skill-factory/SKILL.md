@@ -155,6 +155,7 @@ For detailed guidance, see:
 - [TEMPLATES.md](references/TEMPLATES.md) - Ready-to-use templates
 - [EXAMPLES.md](references/EXAMPLES.md) - Real-world skills
 - [WORKFLOWS.md](references/WORKFLOWS.md) - OpenClaw workflow patterns
+- [BEST-PRACTICES.md](references/BEST-PRACTICES.md) - Writing effective skills
 
 ## Common Patterns
 
@@ -196,3 +197,42 @@ my-skill/
 3. **Avoid prompts/** - Not part of Agent Skills spec
 4. **Keep SKILL.md lean** - Use references/ for detailed docs
 5. **One repo, both platforms** - Agent Skills ignores `workflows/` and `prompts/`
+
+## Best Practices for Writing Skills
+
+### 1. Give AI a Way to Verify Its Work
+- Include validation scripts in `scripts/`
+- Add `--check` flags to CLI tools
+- Provide expected output examples
+
+### 2. Explore First, Then Plan, Then Code
+- User describes problem → Skill proposes approach → Skill executes
+- Write clear "When to Use" sections
+
+### 3. Provide Specific Context
+- Include specific use cases in description: `(1) When user wants X, (2) For Y tasks, (3) Working with Z files`
+- Document edge cases and limitations
+- List prerequisites clearly
+
+### 4. Write Effective SKILL.md
+- Overview: 1-2 sentences
+- When to Use: specific scenarios
+- Prerequisites: required tools/env
+- Examples: with expected outputs
+
+### 5. Use Progressive Disclosure
+```
+Metadata (~100 tokens) → SKILL.md body (<500 lines) → references/
+```
+
+### 6. Test Before Publishing
+```bash
+# Claude Code
+pip install skills-ref
+skills-ref validate ./my-skill
+
+# OpenClaw
+openclaw skills validate
+```
+
+See [BEST-PRACTICES.md](references/BEST-PRACTICES.md) for detailed guidance.
