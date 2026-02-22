@@ -1,6 +1,7 @@
 ---
 name: kanban
-description: "异步任务管理系统。用于：(1) 添加任务到 inbox，(2) 查看任务进度，(3) 处理 backlog。触发方式：用户说'添加任务'/'task add'/'kanban'或类似表达。注意：只写 inbox，不立即执行任务。"
+description: "异步任务管理系统。用于：(1) 添加任务到 inbox，(2) 查看任务进度，(3) 处理 backlog。触发方式：用户说'添加任务'/'task add'/'kanban'或类似表达。注意：只写 inbox，不立即执行任务。Not for: 需要立即执行的任务。"
+metadata: {"openclaw": {"emoji": "📋"}}
 ---
 
 # Kanban Skill
@@ -16,6 +17,18 @@ description: "异步任务管理系统。用于：(1) 添加任务到 inbox，(2
 - "帮我记个任务"
 - "kanban"
 - 或任何表达"添加任务到待办"的意图
+
+## When to Use
+
+- 用户说"添加任务"、"加个任务"、"task add"
+- 用户说"帮我记个任务"
+- 用户提到"kanban"或待办
+- 需要异步处理的任务（不是立即执行）
+
+## Prerequisites
+
+- 本地 `~/kanban/` 目录已配置
+- inbox.md、active.md、backlog.md 文件存在
 
 ## 执行规则
 
