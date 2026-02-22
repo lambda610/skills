@@ -7,18 +7,28 @@ Copy and customize these templates for your skills.
 ```yaml
 ---
 name: my-skill
-description: Brief description of what this skill does. Use when user wants to [task].
+description: Do X. Use when: (1) User wants to accomplish X, (2) Working with Y type of input, (3) Need to produce Z output. Not for: Scenarios A, B.
 ---
 
 # My Skill
 
 ## Overview
 
-[What this enables]
+[What this enables - 1-2 sentences]
+
+## When to Use
+
+- User wants to [specific task]
+- Working with [file type/domain]
+- Need to [achieve outcome]
+
+## Prerequisites
+
+- [Required tool or environment]
 
 ## Usage
 
-[How to use]
+[How to use - basic example]
 ```
 
 ## Template 2: Full OpenClaw Skill
@@ -26,7 +36,7 @@ description: Brief description of what this skill does. Use when user wants to [
 ```yaml
 ---
 name: my-skill
-description: Comprehensive description. Use when: (1) Task A, (2) Task B, (3) Task C.
+description: Do X. Use when: (1) Task A, (2) Task B, (3) Task C. Requires: [prerequisites]. Not for: [limitations].
 metadata:
   {
     "openclaw": {
@@ -40,7 +50,17 @@ metadata:
 
 ## Overview
 
-[What this enables]
+[What this enables - 1-2 sentences]
+
+## When to Use
+
+- User wants to [specific task]
+- Working with [file type/domain]
+- Need to [achieve outcome]
+
+## Prerequisites
+
+- [Required tool or environment]
 
 ## Commands
 
@@ -50,6 +70,14 @@ metadata:
 ## Quick Start
 
 [Basic usage examples]
+
+```bash
+# Example 1
+command
+
+# Example 2
+command
+```
 
 ## Scripts
 
