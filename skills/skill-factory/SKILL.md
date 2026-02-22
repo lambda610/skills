@@ -1,6 +1,7 @@
 ---
 name: skill-factory
-description: Create skills compatible with both OpenClaw and Claude Code (Agent Skills). Use when building a new skill that supports dual platforms with unified YAML frontmatter, proper validation, and OpenClaw workflows.
+description: Create skills compatible with both OpenClaw and Claude Code (Agent Skills). Use when: (1) Building a new skill that supports dual platforms, (2) Need unified YAML frontmatter with proper validation, (3) Working with OpenClaw workflows. Not for: Single-platform skills that don't need cross-compatibility.
+metadata: {"openclaw": {"emoji": "🛠"}}
 ---
 
 # Skill Factory
@@ -34,6 +35,50 @@ metadata:                     # optional, client-specific
       env: []
       config: []
 ---
+```
+
+## When to Use
+
+- User wants to create a new skill for both OpenClaw and Claude Code
+- Need to validate skill structure before publishing
+- Working with OpenClaw workflows and commands
+- Want to follow Agent Skills specification
+
+## Prerequisites
+
+- Python 3.x (for validation scripts)
+- (Optional) git for version control
+- (Optional) skills-ref for Claude Code validation: `pip install skills-ref`
+
+## Examples
+
+### Create a basic skill structure
+```bash
+mkdir -p my-skill/{scripts,references,assets}
+# Then write SKILL.md with YAML frontmatter
+```
+
+### Validate a skill
+```bash
+# Claude Code
+skills-ref validate ./my-skill
+
+# OpenClaw (built-in)
+openclaw skills validate
+```
+
+### Add OpenClaw workflow
+```yaml
+# workflows/hello.yaml
+name: hello
+description: Say hello
+arguments:
+  - name: name
+    type: string
+    required: true
+steps:
+  - run: echo
+    args: ["Hello, {{ args.name }}!"]
 ```
 
 ## Workflow: Creating a New Skill
