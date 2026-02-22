@@ -1,6 +1,7 @@
 ---
 name: deepwiki
-description: "AI-powered local codebase documentation generator. Use for: (1) Deep code analysis with business logic extraction, (2) Comprehensive API documentation with signatures, (3) Architecture diagrams and data flow mapping, (4) Code patterns identification and design decisions."
+description: "AI-powered local codebase documentation generator. Use for: (1) Deep code analysis with business logic extraction, (2) Comprehensive API documentation with signatures, (3) Architecture diagrams and data flow mapping, (4) Code patterns identification and design decisions. Not for: Simple file listings or code comments only."
+metadata: {"openclaw": {"emoji": "📚"}}
 ---
 
 # DeepWiki — Professional Codebase Documentation Generator
@@ -40,6 +41,19 @@ Simply describe what documentation you need:
 ```
 
 DeepWiki will read your actual code, not just filenames, to create comprehensive documentation.
+
+## When to Use
+
+- User wants to document a new codebase
+- Need to understand legacy or complex code
+- Onboarding new team members
+- Preparing context for AI tools
+- Creating public API documentation
+
+## Prerequisites
+
+- Claude Code or OpenClaw with read access to the codebase
+- (Optional) `tree` command for directory structure visualization
 
 ## OpenClaw Usage
 
