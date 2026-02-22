@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: "AI 提示词优化工具 (AI Prompt Optimization Tool). Supports: (1) User prompt optimization (basic/planning/professional), (2) System prompt optimization (general/analytical/format), (3) Iteration, (4) Text-to-image/image-to-image optimization, (5) Prompt evaluation, (6) Variable extraction and generation. Use for: optimizing vague prompts, building system prompts, improving existing prompts, generating image prompts, evaluating prompt quality, extracting/generating variables."
+description: "AI 提示词优化工具 (AI Prompt Optimization Tool). Supports: (1) User prompt optimization (basic/planning/professional), (2) System prompt optimization (general/analytical/format), (3) Iteration, (4) Text-to-image/image-to-image optimization, (5) Prompt evaluation, (6) Variable extraction and generation. Use for: optimizing vague prompts, building system prompts, improving existing prompts, generating image prompts, evaluating prompt quality, extracting/generating variables. Not for: Non-prompt-related tasks."
 metadata:
   {
     "openclaw": {
