@@ -1,6 +1,6 @@
 ---
 name: skill-factory
-description: Create skills compatible with both OpenClaw and Claude Code (Agent Skills). Use when: (1) Building a new skill that supports dual platforms, (2) Need unified YAML frontmatter with proper validation, (3) Working with OpenClaw workflows. Not for: Single-platform skills that don't need cross-compatibility.
+description: Create skills compatible with both OpenClaw and Claude Code (Agent Skills). Use when: (1) Building a new skill that supports dual platforms, (2) Need unified YAML frontmatter with proper validation. Not for: Single-platform skills that don't need cross-compatibility.
 metadata: {"openclaw": {"emoji": "🛠"}}
 ---
 
@@ -15,8 +15,8 @@ Create dual-compatible skills following both **Agent Skills spec** (agentskills.
 | Aspect | Agent Skills (Claude Code) | OpenClaw |
 |--------|---------------------------|----------|
 | **Trigger** | YAML frontmatter `description` matches user message | Commands via `/skill-cmd` |
-| **Validation** | `skills-ref validate` | `quick_validate.py` |
-| **Optional dirs** | `scripts/`, `references/`, `assets/` | `workflows/`, `scripts/`, `references/`, `prompts/` |
+| **Validation** | `skills-ref validate` | `openclaw skills validate` |
+| **Optional dirs** | `scripts/`, `references/`, `assets/` | `scripts/`, `references/` |
 | **Key extension** | - | `metadata.openclaw` for gating |
 
 ### Unified Approach
@@ -41,7 +41,6 @@ metadata:                     # optional, client-specific
 
 - User wants to create a new skill for both OpenClaw and Claude Code
 - Need to validate skill structure before publishing
-- Working with OpenClaw workflows and commands
 - Want to follow Agent Skills specification
 
 ## Prerequisites
@@ -67,31 +66,13 @@ skills-ref validate ./my-skill
 openclaw skills validate
 ```
 
-### Add OpenClaw workflow
-```yaml
-# workflows/hello.yaml
-name: hello
-description: Say hello
-arguments:
-  - name: name
-    type: string
-    required: true
-steps:
-  - run: echo
-    args: ["Hello, {{ args.name }}!"]
-```
-
 ## Workflow: Creating a New Skill
 
 ### Step 1: Initialize
 
-Use the OpenClaw init script or create manually:
+Create the skill directory manually:
 
 ```bash
-# Using OpenClaw's init_skill.py
-python3 /path/to/init_skill.py my-skill --path ./skills --resources scripts,references --examples
-
-# Manual creation
 mkdir -p my-skill/{scripts,references,assets}
 ```
 
@@ -137,13 +118,7 @@ metadata:
 skills-ref validate ./my-skill
 
 # OpenClaw validation
-python3 quick_validate.py ./my-skill
-```
-
-### Step 4: Package (OpenClaw)
-
-```bash
-python3 package_skill.py ./my-skill ./dist
+openclaw skills validate
 ```
 
 ## Validation Rules (from Specs)
@@ -199,40 +174,36 @@ For detailed guidance, see:
 - [VALIDATION.md](references/VALIDATION.md) - Validation rules
 - [TEMPLATES.md](references/TEMPLATES.md) - Ready-to-use templates
 - [EXAMPLES.md](references/EXAMPLES.md) - Real-world skills
-- [WORKFLOWS.md](references/WORKFLOWS.md) - OpenClaw workflow patterns
 - [BEST-PRACTICES.md](references/BEST-PRACTICES.md) - Writing effective skills
 
 ## Common Patterns
 
-### Pattern 1: Agent Skills Only
+### Agent Skills Structure
 
 ```
 my-skill/
-├── SKILL.yaml              # YAML frontmatter + body
-├── scripts/                # Executable code
-└── references/             # Documentation
-```
-
-### Pattern 2: OpenClaw with Commands
-
-```
-my-skill/
-├── SKILL.md
-├── workflows/              # Command definitions
-│   ├── command1.yaml
-│   └── command2.yaml
-└── scripts/
-```
-
-### Pattern 3: Dual-Compatible (Recommended)
-
-```
-my-skill/
-├── SKILL.md               # Works on both platforms
-├── workflows/             # OpenClaw commands (ignored by Claude Code)
-├── scripts/               # Shared executables
-├── references/            # Documentation
+├── SKILL.md               # YAML frontmatter + instructions
+├── scripts/               # Executable code
+├── references/            # Detailed documentation
 └── assets/                # Templates
+```
+
+### OpenClaw Extension
+
+OpenClaw adds optional metadata for gating and installation:
+
+```yaml
+---
+name: my-skill
+description: ...
+metadata:
+  {
+    "openclaw": {
+      "requires": { "bins": ["python3"] },
+      "emoji": "🛠"
+    }
+  }
+---
 ```
 
 ## Key Principles
@@ -241,7 +212,7 @@ my-skill/
 2. **OpenClaw metadata optional** - Add only if you need gating/install
 3. **Avoid prompts/** - Not part of Agent Skills spec
 4. **Keep SKILL.md lean** - Use references/ for detailed docs
-5. **One repo, both platforms** - Agent Skills ignores `workflows/` and `prompts/`
+5. **One repo, both platforms** - Both platforms read SKILL.md, scripts/, references/
 
 ## Best Practices for Writing Skills
 
