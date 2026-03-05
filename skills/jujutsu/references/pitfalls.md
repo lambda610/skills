@@ -1,209 +1,209 @@
-# 常见错误与陷阱
+# Common Mistakes and Pitfalls
 
-> 基于官方文档，Agent 容易犯的错误。
+> Based on official docs, mistakes agents commonly make.
 
-## 🔴 严重错误
+## 🔴 Critical Mistakes
 
-### 用 `git add`
+### Using `git add`
 
-**错误**：想暂存文件时用 `git add`
+**Mistake**: Using `git add` to stage files
 
-**问题**：jj 没有暂存区概念，`git add` 不会生效
+**Problem**: jj has no staging area, `git add` has no effect
 
-**正确做法**：
+**Correct**:
 ```bash
-# jj 自动追踪所有修改，直接提交即可
+# jj auto-tracks all changes, just commit directly
 jj commit -m "message"
 
-# 如果只想提交部分文件，用 jj split
+# If you only want to commit some files, use jj split
 jj split file1 file2
 ```
 
-### 用 `jj co` 或 `jj checkout` 切换
+### Using `jj co` or `jj checkout` to Switch
 
-**错误**：用 `jj co <bookmark>` 或 `jj checkout`
+**Mistake**: Using `jj co <bookmark>` or `jj checkout`
 
-**问题**：jj 根本没有这两个命令！
+**Problem**: jj doesn't have these commands at all!
 
-**正确做法**：
+**Correct**:
 ```bash
-# 创建新 change 在 bookmark 上（相当于 checkout -b）
+# Create new change on bookmark (like checkout -b)
 jj new main
 
-# 创建新 change 并设置 bookmark
+# Create new change and set bookmark
 jj new main -b myfeature
 
-# 编辑现有 commit
+# Edit existing commit
 jj edit <revision>
 ```
 
-### 用 `git stash` 暂存
+### Using `git stash`
 
-**错误**：用 `git stash`
+**Mistake**: Using `git stash`
 
-**问题**：jj 没有 stash，用 `jj new @-` 创建兄弟 commit
+**Problem**: jj has no stash, use `jj new @-` to create sibling commit
 
-**正确做法**：
+**Correct**:
 ```bash
-# 临时保存当前工作（创建兄弟 commit）
+# Temporarily save current work (create sibling commit)
 jj new @-
 
-# 恢复：用 jj edit 回到原 commit
-jj edit <原commit>
+# Restore: jj edit to go back to original commit
+jj edit <original-commit>
 ```
 
-### 用 `git merge`
+### Using `git merge`
 
-**错误**：用 `jj merge`
+**Mistake**: Using `jj merge`
 
-**问题**：jj 没有 merge 命令
+**Problem**: jj has no merge command
 
-**正确做法**：
+**Correct**:
 ```bash
-# 合并 A 到当前 commit
+# Merge A into current commit
 jj new @ A
 ```
 
-## 🟠 易错操作
+## 🟠 Common Mistakes
 
-### 混淆 `-b` 和 `-s` 在 rebase
+### Confusing `-b` and `-s` in Rebase
 
-**误解**：`-b` 移动单个 commit
+**Misconception**: `-b` moves a single commit
 
-**正确**：
-- `-b <bookmark>`：移动整个分支（包含祖先，不含 destination 的祖先）
-- `-s <commit>`：移动 commit 及其所有后代
-- `-r <commit>`：只移动指定的 commit（不含后代）
+**Correct**:
+- `-b <bookmark>`: Move entire branch (includes ancestors, excluding destination's ancestors)
+- `-s <commit>`: Move commit and all descendants
+- `-r <commit>`: Move only the specified commit (no descendants)
 
 ```bash
-# 移动 A 及其后代
+# Move A and descendants
 jj rebase -s A -o B
 
-# 移动整个分支
+# Move entire branch
 jj rebase -b bookmark -o main
 
-# 只移动单个 commit
+# Move only single commit
 jj rebase -r A -o B
 ```
 
-### `jj new` 不带参数
+### `jj new` Without Arguments
 
-**误解**：`jj new` 等于 `git checkout -b`
+**Misconception**: `jj new` equals `git checkout -b`
 
-**正确**：`jj new` 基于当前 `@` 创建新 change，不带 bookmark 名
+**Correct**: `jj new` creates a new change based on current `@`, no bookmark name
 
 ```bash
-# 创建新 change（无 bookmark）
+# Create new change (no bookmark)
 jj new
 
-# 创建并设置 bookmark
+# Create and set bookmark
 jj new -b <bookmark>
 
-# 基于某提交创建
+# Create based on some commit
 jj new <revision>
 ```
 
-### 冲突后不知如何继续
+### Not Knowing How to Continue After Conflicts
 
-**误解**：遇到冲突必须立即解决
+**Misconception**: Must resolve conflicts immediately
 
-**正确**：jj 允许先继续工作，稍后再解决
+**Correct**: jj allows continuing work first, resolving later
 
 ```bash
-# 冲突后，jj 会创建 conflicted change
-# 可以继续创建新 commit
+# After conflict, jj creates conflicted change
+# Can continue creating new commits
 jj new
 
-# 之后回到冲突 commit 解决
+# Then go back to resolve
 jj new <conflicted-commit>
-# 解决文件中的冲突
+# Resolve conflicts in files
 jj resolve <file>
 jj squash
 ```
 
-### 用 `jj file untrack` 但不设置 ignore
+### Using `jj file untrack` Without Setting Ignore
 
-**错误**：直接 `jj file untrack`
+**Mistake**: Running `jj file untrack` directly
 
-**问题**：文件必须匹配 ignore pattern 才能 untrack
+**Problem**: File must match ignore pattern to untrack
 
-**正确做法**：
+**Correct**:
 ```bash
-# 1. 先添加到 .gitignore
+# 1. Add to .gitignore first
 echo "file.txt" >> .gitignore
 
-# 2. 再 untrack
+# 2. Then untrack
 jj file untrack file.txt
 ```
 
-### 混淆 bookmarks 和 changes
+### Confusing Bookmarks and Changes
 
-**误解**：bookmark 就是 branch
+**Misconception**: Bookmark equals branch
 
-**正确**：
-- **Bookmark**：类似 Git branch，是指向提交的指针
-- **Change**：jj 核心概念，是可编辑的提交
-- **Working-copy commit**：当前工作目录的 commit（@ 符号）
-- **无"当前 bookmark"** — jj 没有活跃分支的概念
+**Correct**:
+- **Bookmark**: Similar to Git branch, pointer to a commit
+- **Change**: jj's core concept, editable commit
+- **Working-copy commit**: The commit in current working directory (@ symbol)
+- **No "current bookmark"** — jj has no active branch concept
 
-### 忽略 divergent changes
+### Ignoring Divergent Changes
 
-**误解**：只要用 change ID 就不会有歧义
+**Misconception**: Using change ID is always unambiguous
 
-**正确**：如果 change ID 分叉了，需要用 commit ID 或带偏移的 change ID
+**Correct**: If change ID has diverged, need to use commit ID or change ID with offset
 
 ```bash
-# 分叉的 change ID
-jj log  # 显示为 xyz/0, xyz/1
+# Diverged change ID
+jj log  # Shows as xyz/0, xyz/1
 
-# 用 commit ID 指定
+# Use commit ID
 jj edit <commit-id>
 
-# 或用带偏移的 change ID
+# Or use change ID with offset
 jj edit xyz/0
 ```
 
-## 🟡 小问题
+## 🟡 Minor Issues
 
-### 忘记 `-m` 参数
+### Forgetting `-m` Flag
 
-**问题**：`jj commit` 不带 `-m` 会打开编辑器
+**Problem**: `jj commit` without `-m` opens editor
 
-**建议**：习惯用 `jj commit -m "message"`
+**Suggestion**: Get in habit of using `jj commit -m "message"`
 
-### 在 Git 项目中直接用 `git init`
+### Using `git init` in Git Projects
 
-**问题**：应该用 `jj git init`
+**Problem**: Should use `jj git init`
 
-**正确**：
+**Correct**:
 ```bash
 jj git init
-# 或
+# or
 jj git clone <url>
 ```
 
-### 混淆 tracked vs untracked bookmarks
+### Confusing Tracked vs Untracked Bookmarks
 
-**误解**：fetch 后自动跟踪
+**Misconception**: Auto-tracks after fetch
 
-**正确**：
+**Correct**:
 ```bash
-# 默认只跟踪 origin 的 main
-# 其他需要手动 track
+# Only tracks origin/main by default
+# Others need manual track
 jj bookmark track <name> --remote=<remote>
 
-# 查看tracked
+# View tracked
 jj bookmark list --tracked
 ```
 
-## 检查清单
+## Checklist
 
-操作前快速检查：
-- [ ] 不要用 `git add`
-- [ ] 不要用 `jj co` 或 `jj checkout`
-- [ ] 用 `jj commit` 而不是 `git commit`
-- [ ] 用 `jj bookmark` 而不是 `git branch`
-- [ ] 用 `jj new @ A` 而不是 `git merge`
-- [ ] 用 `jj rebase -b` 或 `-s` 变基
-- [ ] 用 `jj new @-` 暂存而不是 `git stash`
-- [ ] 分叉的 change ID 需要用 commit ID 明确指定
+Before operating, quick check:
+- [ ] Don't use `git add`
+- [ ] Don't use `jj co` or `jj checkout`
+- [ ] Use `jj commit` not `git commit`
+- [ ] Use `jj bookmark` not `git branch`
+- [ ] Use `jj new @ A` not `git merge`
+- [ ] Use `jj rebase -b`, `-s`, or `-r` for rebase
+- [ ] Use `jj new @-` for stash, not `git stash`
+- [ ] Diverged change IDs need explicit commit ID
