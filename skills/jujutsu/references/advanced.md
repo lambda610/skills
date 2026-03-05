@@ -1,259 +1,259 @@
-# 高级主题
+# Advanced Topics
 
-> 基于官方文档的补充内容
+> Supplementary content based on official docs
 
-## Colocated Workspaces（共存工作区）
+## Colocated Workspaces
 
-jj 和 git 可以共存于同一目录，方便迁移和混用工具。
+jj and git can coexist in the same directory, facilitating migration and tool interoperability.
 
-### 创建
+### Creation
 
 ```bash
-# 新建共存工作区（默认行为）
+# Create colocated workspace (default)
 jj git init
-# 或
+# or
 jj git clone <url>
 
-# 禁用共存
+# Disable colocation
 jj git init --no-colocate
 jj git clone --no-colocate <url>
 ```
 
-### 混用 jj 和 git
+### Mixing jj and git
 
 ```bash
-# 在共存工作区中可以：
+# In colocated workspace you can:
 jj st
-git status  # 也可以用，但可能显示"detached HEAD"
+git status  # Can also use, but may show "detached HEAD"
 
-# jj 命令会自动 import/export 到 git
-# 但建议主要用 jj，git 只做只读操作
+# jj commands auto import/export to git
+# But recommend mainly using jj, git for read-only only
 ```
 
-### 切换共存状态
+### Switching Colocation State
 
 ```bash
-# 查看当前状态
+# Check current status
 jj git colocation status
 
-# 启用共存
+# Enable colocation
 jj git colocation enable
 
-# 禁用共存
+# Disable colocation
 jj git colocation disable
 ```
 
-### 注意事项
+### Notes
 
-- jj 命令会频繁自动 import/export，可能导致分支冲突
-- 大型仓库中 jj 会变慢（每次命令都执行 git import）
-- 有冲突文件时 Git 工具可能出问题
+- jj commands frequently auto import/export, may cause branch conflicts
+- In large repos jj can be slower (executes git import on every command)
+- Git tools may have issues with conflicted files
 
-## Multiple Remotes（多远程）
+## Multiple Remotes
 
-### 典型工作流
+### Typical Workflows
 
-#### Fork 工作流（贡献上游）
+#### Fork Workflow (Contributing Upstream)
 
 ```bash
-# 1. 配置同时从多个 remote 拉取
-jj config set --repo git.fetch '["upstream", "origin"]'
+# 1. Configure fetch from multiple remotes
+jj config set --user git.fetch '["upstream", "origin"]'
 
-# 2. 推送只用 origin
-jj config set --repo git.push origin
+# 2. Push only to origin
+jj config set --user git.push origin
 
-# 3. 跟踪远程 bookmark
-jj bookmark track main  # 跟踪 origin/main
-jj bookmark track main --remote=upstream  # 也跟踪 upstream
+# 3. Track remote bookmarks
+jj bookmark track main  # Track origin/main
+jj bookmark track main --remote=upstream  # Also track upstream
 
-# 4. 设置 trunk（作为 immutable 基础）
-jj config set --repo 'revset-aliases."trunk()"' main@upstream
+# 4. Set trunk (as immutable base)
+jj config set --user 'revset-aliases."trunk()"' main@upstream
 ```
 
-#### 集成工作流（独立仓库）
+#### Integration Workflow (Independent Repo)
 
 ```bash
-# 1. 只从 origin 拉取和推送
-jj config set --repo git.fetch '["origin"]'
+# 1. Only fetch and push from/to origin
+jj config set --user git.fetch '["origin"]'
 
-# 2. 只跟踪 origin
+# 2. Only track origin
 jj bookmark track main --remote=origin
 jj bookmark untrack main --remote=upstream
 
-# 3. 设置 trunk 为 origin
-jj config set --repo 'revset-aliases."trunk()"' main@origin
+# 3. Set trunk to origin
+jj config set --user 'revset-aliases."trunk()"' main@origin
 ```
 
-### Remote Bookmarks 引用
+### Remote Bookmark References
 
 ```bash
-# 引用远程 bookmark
-main@origin   # origin 上的 main
-main@upstream # upstream 上的 main
+# Reference remote bookmarks
+main@origin   # main on origin
+main@upstream # main on upstream
 
-# 在新远程上创建
+# Create on new remote
 jj new main@upstream
 ```
 
-## Divergent Changes（分叉变化）
+## Divergent Changes
 
-当同一 change ID 有多个可见 commit 时发生。
+When a change ID has multiple visible commits.
 
-### 原因
+### Causes
 
-1. 本地和远程同时修改了同一个 change
-2. 从不同 workspace 操作同一 change
-3. 并发操作导致
+1. Local and remote both modified same change
+2. Operating on same change from different workspaces
+3. Concurrent operations
 
-### 识别
+### Identification
 
 ```bash
 jj log
-# 显示：
+# Shows:
 # mzvwutvl/0 ... (divergent)
 # mzvwutvl/1 ... (divergent)
 ```
 
-### 解决策略
+### Resolution Strategies
 
-#### 1. 放弃一个
+#### 1. Abandon One
 
 ```bash
-# 放弃不需要的版本
+# Abandon unwanted version
 jj abandon <commit-id>
 ```
 
-#### 2. 生成新 change ID
+#### 2. Generate New Change ID
 
 ```bash
-# 为一个 commit 生成新的 change ID
+# Generate new change ID for a commit
 jj metaedit --update-change-id <commit-id>
 ```
 
-#### 3. 合并内容
+#### 3. Squash Together
 
 ```bash
-# 把一个 squash 到另一个
+# Squash one into another
 jj squash --from <source-commit-id> --into <target-commit-id>
 ```
 
-#### 4. 忽略
+#### 4. Ignore
 
-如果不影响工作，可以暂时不管。
+If not affecting work, can leave as-is.
 
-## Operation Log（操作日志）
+## Operation Log
 
-jj 记录每次修改仓库的操作，比 Git 的 reflog 更强大。
+jj records every operation that modifies the repo, more powerful than Git's reflog.
 
-### 查看
+### Viewing
 
 ```bash
-# 操作列表
+# Operation list
 jj op log
 
-# 带 diff 的操作历史
+# Operations with diffs
 jj op log -p
 ```
 
-### 撤销
+### Undoing
 
 ```bash
-# 撤销上一次操作
+# Undo last operation
 jj undo
 
-# 撤销到特定操作
+# Undo to specific operation
 jj undo --at-operation <operation-id>
 ```
 
-### 恢复到之前状态
+### Restoring to Previous State
 
 ```bash
-# 恢复整个仓库到某操作时的状态
+# Restore entire repo to state at operation
 jj op restore --at-operation <operation-id>
 ```
 
-### 时光倒流
+### Time Travel
 
 ```bash
-# 在某个操作的状态下运行命令（不修改）
+# Run command at operation state (non-destructive)
 jj --at-operation <operation-id> log
 ```
 
-## Conflict 深入
+## Deep Dive on Conflicts
 
-### 冲突类型
+### Conflict Types
 
-1. **文件冲突**：同一文件同一位置被不同修改
-2. **Bookmark 冲突**：本地和远程 bookmark 移动冲突
-3. **Change 分叉**：同一 change ID 多个可见 commit
+1. **File conflicts**: Same file/location modified differently
+2. **Bookmark conflicts**: Local and remote bookmark move conflicts
+3. **Change divergence**: Same change ID multiple visible commits
 
-### 冲突解决
+### Conflict Resolution
 
 ```bash
-# 1. 创建新 commit 在冲突 commit 上
+# 1. Create new commit on conflicted commit
 jj new <conflicted-commit>
 
-# 2. 编辑文件解决冲突
-# 编辑冲突标记...
+# 2. Edit files to resolve conflicts
+# Edit conflict markers...
 
-# 3. 标记解决
+# 3. Mark resolved
 jj resolve <file>
 
-# 4. 如果有多个冲突文件，全部解决后
+# 4. If multiple conflicted files, after all resolved
 jj squash
 ```
 
-### 冲突标记风格
+### Conflict Marker Styles
 
-可配置（默认 "diff"）：
+Configurable (default "diff"):
 ```bash
-# diff 风格（默认）
+# diff style (default)
 jj config set --user ui.conflict-marker-style diff
 
-# snapshot 风格
+# snapshot style
 jj config set --user ui.conflict-marker-style snapshot
 
-# git 风格
+# git style
 jj config set --user ui.conflict-marker-style git
 ```
 
-## Filesets（文件集）
+## Filesets
 
-类似 revset 但用于文件选择。
+Similar to revsets but for file selection.
 
-### 语法
+### Syntax
 
 ```bash
-# 文件路径
+# File path
 jj diff file.txt
 
-# glob 模式
+# glob pattern
 jj diff 'glob:*.rs'
 
-# cwd 前缀
+# cwd prefix
 jj diff 'cwd:src/'
 
-# root 前缀
+# root prefix
 jj diff 'root:src/'
 
-# 组合
+# Combination
 jj diff 'src ~ glob:**/test*.rs'
 jj diff 'glob:*.rs | glob:*.md'
 ```
 
-### 使用场景
+### Use Cases
 
 ```bash
-# 拆分时只选部分文件
+# Split only selected files
 jj split 'glob:*.rs'
 
-# 查看特定目录差异
+# View specific directory diff
 jj diff 'root:src/'
 ```
 
-## 配置示例
+## Configuration Examples
 
-### 用户配置
+### User Configuration
 
 ```toml
 [user]
@@ -268,7 +268,7 @@ default-command = ["log", "--reversed"]
 color-words.max-inline-alternation = 3
 ```
 
-### 自动签名
+### Auto-signing
 
 ```toml
 [signing]
