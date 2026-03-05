@@ -1,133 +1,135 @@
-# Revset 查询语法
+# Revset Query Syntax
 
-> 基于官方文档：https://www.jj-vcs.dev/latest/revsets/
+> Based on official docs: https://www.jj-vcs.dev/latest/revsets/
 
-Revset 是 jj 强大的查询语法，能精确定位提交。
+Revsets are jj's powerful query syntax for precisely locating commits.
 
-## 基本语法
+## Basic Syntax
 
 ```bash
 jj log -r <revset>
 ```
 
-## 常用符号
+## Common Symbols
 
-| 符号 | 含义 |
-|------|------|
-| `@` | 当前 working-copy commit |
-| `@-` | 当前 commit 的父提交 |
-| `@--` | 祖父提交 |
-| `main` | bookmark 名为 main 的提交 |
-| `HEAD` | HEAD 指向的提交 |
-| `root()` | 仓库根提交（虚拟 commit，hash 全为 0） |
+| Symbol | Meaning |
+|--------|---------|
+| `@` | Current working-copy commit |
+| `@-` | Parent of current commit |
+| `@--` | Grandparent commit |
+| `main` | Commit pointed to by bookmark `main` |
+| `HEAD` | Commit pointed to by HEAD |
+| `root()` | Repository root commit (virtual commit, all-zero hash) |
 
-## 运算符
+## Operators
 
-| 运算符 | 含义 | 示例 |
-|--------|------|------|
-| `::` | 祖先范围（包含自己） | `main::` = main 的所有后代 |
-| `..` | 不包含祖先 | `main..main~5` |
-| `|` | 并集 | `main \| feature` |
-| `&` | 交集 | `main & @` |
-| `~` | 差集 | `@ ~ main` |
-| `-` | 父母（单数） | `@-` = 父提交 |
-| `+` | 子孙（单数） | |
+| Operator | Meaning | Example |
+|----------|---------|---------|
+| `::` | Ancestor range (inclusive) | `main::` = all descendants of main |
+| `..` | Excluding ancestors | `main..main~5` |
+| `\|` | Union | `main \| feature` |
+| `&` | Intersection | `main & @` |
+| `~` | Difference | `@ ~ main` |
+| `-` | Parent (singular) | `@-` = parent commit |
+| `+` | Child (singular) | |
 
-## 范围运算符
+## Range Operators
 
-| 运算符 | 含义 |
-|--------|------|
-| `x::y` | x 到 y 之间的后代（包含 x 和 y） |
-| `x..y` | x 到 y 之间的祖先（不包含 x 的祖先） |
-| `::x` | x 的所有祖先 |
-| `x::` | x 的所有后代 |
+| Operator | Meaning |
+|----------|---------|
+| `x::y` | Descendants between x and y (inclusive) |
+| `x..y` | Ancestors between x and y (excluding x's ancestors) |
+| `::x` | All ancestors of x |
+| `x::` | All descendants of x |
 
-**注意**：`..` 在左边时不分配（不同于 `|`）：
-- `(A | B)..` = `A.. & B..`（交集）
-- `A.. | B..` = 并集
+**Note**: `..` on the left side does not distribute like `|`:
+- `(A | B)..` = `A.. & B..` (intersection)
+- `A.. | B..` = union
 
-## 函数
+## Functions
 
-| 函数 | 用法 | 说明 |
-|------|------|------|
-| `all()` | `all()` | 所有可见 commit |
-| `none()` | `none()` | 空集 |
-| `bookmarks()` | `bookmarks()` | 所有本地 bookmark |
-| `bookmarks(pattern)` | `bookmarks("main")` | 匹配 pattern 的 bookmark |
-| `remote_bookmarks()` | `remote_bookmarks()` | 所有远程 bookmark |
-| `visible_heads()` | `visible_heads()` | 所有可见 head |
-| `parents(x)` | `parents(@)` | x 的父母 |
-| `children(x)` | `children(@)` | x 的子孙 |
-| `ancestors(x)` | `ancestors(@)` | x 的祖先 |
-| `descendants(x)` | `descendants(@)` | x 的后代 |
-| `first_parent(x)` | `first_parent(@)` | 只取第一个父母 |
-| `latest(x)` | `latest(@, 5)` | 最近 N 个 |
-| `merges()` | `merges()` | 合并提交 |
-| `file(path)` | `file("src/main.rs")` | 包含某文件的 commit |
-| `author(name)` | `author("yelo")` | 作者匹配 |
-| `description(text)` | `description("feat")` | 描述包含 |
-| `date(expr)` | `date(2024-01-01)` | 日期 |
+| Function | Usage | Description |
+|----------|-------|-------------|
+| `all()` | `all()` | All visible commits |
+| `none()` | `none()` | Empty set |
+| `bookmarks()` | `bookmarks()` | All local bookmarks |
+| `bookmarks(pattern)` | `bookmarks("main")` | Bookmarks matching pattern |
+| `remote_bookmarks()` | `remote_bookmarks()` | All remote bookmarks |
+| `visible_heads()` | `visible_heads()` | All visible heads |
+| `parents(x)` | `parents(@)` | Parents of x |
+| `children(x)` | `children(@)` | Children of x |
+| `ancestors(x)` | `ancestors(@)` | Ancestors of x |
+| `descendants(x)` | `descendants(@)` | Descendants of x |
+| `first_parent(x)` | `first_parent(@)` | First parent only |
+| `latest(x, n)` | `latest(@, 5)` | Most recent N commits |
+| `merges()` | `merges()` | Merge commits |
+| `file(path)` | `file("src/main.rs")` | Commits touching a file |
+| `author(name)` | `author("yelo")` | Commits by author |
+| `description(text)` | `description("feat")` | Commits with matching description |
+| `date(expr)` | `date(2024-01-01)` | Commits on date |
+| `empty()` | `empty()` | Commits with no file changes |
+| `mutable()` | `mutable()` | Locally mutable commits |
 
-## 常见用法
+## Common Usage
 
 ```bash
-# 当前分支的历史
+# History of current branch
 jj log -r ::@
 
-# 所有未推送的提交
+# All unpushed commits
 jj log -r '@..@|bookmarks(@)..'
 
-# 某个 bookmark 的历史
+# History of a bookmark
 jj log -r main::main
 
-# 最近 5 个提交
+# Most recent 5 commits
 jj log -r latest(@, 5)
 
-# 包含某个文件的提交
+# Commits touching a file
 jj log -r 'file(path/to/file)'
 
-# 在某日期之后的提交
+# Commits after a date
 jj log -r 'date(2024-01-01)..'
 
-# 作者包含某字符串的提交
+# Commits by author
 jj log -r 'author(yelo)'
 
-# 合并提交
+# Merge commits
 jj log -r 'merges()'
 
-# 空提交（无文件变更）
+# Empty commits (no file changes)
 jj log -r 'empty()'
 
-# 可变 commits（本地修改过的）
+# Mutable commits (locally modified)
 jj log -r 'mutable()'
 ```
 
-## 快捷方式
+## Shortcuts
 
-| 快捷 | 展开 |
-|-------|------|
-| `@~n` | `@-n`，第 n 个祖先 |
-| `@^` | `@-`，父提交 |
-| `main~3` | main 的第 3 个祖先 |
+| Shorthand | Expands to |
+|-----------|-----------|
+| `@~n` | nth ancestor of @ |
+| `@^` | `@-`, parent commit |
+| `main~3` | 3rd ancestor of main |
 
-## 示例
+## Examples
 
 ```bash
-# 查看当前 commit 的祖先链
+# View ancestor chain of current commit
 jj log -r ::@
 
-# 查看 feature 分支独有的提交
+# View commits unique to feature branch
 jj log -r 'feature - main'
 
-# 查看最近一周的提交
+# View commits from the last week
 jj log -r 'date(-7d)..'
 
-# 查看两个 bookmark 之间的差异
+# View diff between two bookmarks
 jj diff -r main..feature
 
-# 查看某个人的所有提交
+# View all commits by a specific author
 jj log -r 'author(yelo)'
 
-# 查看所有 bookmark 的最新位置
+# View latest position of all bookmarks
 jj log -r 'bookmarks()'
 ```
