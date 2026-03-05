@@ -30,19 +30,6 @@ git status  # Can also use, but may show "detached HEAD"
 # But recommend mainly using jj, git for read-only only
 ```
 
-### Switching Colocation State
-
-```bash
-# Check current status
-jj git colocation status
-
-# Enable colocation
-jj git colocation enable
-
-# Disable colocation
-jj git colocation disable
-```
-
 ### Notes
 
 - jj commands frequently auto import/export, may cause branch conflicts
