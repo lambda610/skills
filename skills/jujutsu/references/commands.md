@@ -1,6 +1,6 @@
 # 命令对照表（带解释）
 
-> 对比 Git 命令，理解为什么不同。
+> 基于官方文档：https://www.jj-vcs.dev/latest/git-command-table/
 
 ## 基础操作
 
@@ -9,11 +9,11 @@
 | `git status` | `jj st` | 查看当前工作状态 |
 | `git diff` | `jj diff` | 查看未提交的修改 |
 | `git diff HEAD` | `jj diff` | 同上，jj 默认比较 HEAD |
-| `git diff <A>..<B>` | `jj diff -r <A> --to <B>` | 比较两个提交 |
+| `git diff <A>..<B>` | `jj diff -r A..B` | 比较两个提交 |
 | `git add` | ❌ 不需要 | jj 自动追踪所有修改 |
 | `git commit` | `jj commit -m "msg"` | 提交当前所有变更 |
 | `git commit -a` | `jj commit` | 同上，jj 不需要 -a |
-| `git commit --amend` | `jj squash @` | 把变更合并到当前提交 |
+| `git commit --amend` | `jj squash` | 把当前变更合并到父提交 |
 | `git restore <file>` | `jj restore <file>` | 撤销文件修改 |
 | `git checkout -- <file>` | `jj restore <file>` | 同上 |
 
@@ -21,53 +21,59 @@
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git log` | `jj log` | 查看历史（默认显示当前 change） |
+| `git log` | `jj log` | 查看历史 |
 | `git log --oneline` | `jj log -r ::@` | 简洁格式 |
-| `git log --graph` | `jj log --graph` | 图形化（jj 更美观） |
-| `git log --all` | `jj log -r 'all()'` | 查看所有 bookmark |
+| `git log --graph` | `jj log --graph` | 图形化 |
+| `git log --all` | `jj log -r 'all()'` | 查看所有 |
 | `git show <rev>` | `jj show <rev>` | 查看提交详情 |
-| `git blame <file>` | `jj file annotate <file>` | 查看文件每行最后修改 |
+| `git blame <file>` | `jj file annotate <file>` | 文件注解 |
 
-## 分支操作（Bookmarks）
+## ⚠️ 分支操作（关键区别！）
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git branch` | `jj bookmark list` | 列出分支 |
-| `git branch <name>` | `jj bookmark create <name>` | 创建分支 |
-| `git branch -d <name>` | `jj bookmark delete <name>` | 删除分支 |
-| `git checkout <name>` | `jj co <name>` | 切换分支 |
-| `git checkout -b <name>` | `jj new <name>` | 创建并切换 |
-| `git branch -f <name> <rev>` | `jj bookmark move <name> --to <rev>` | 移动分支 |
+| `git checkout <branch>` | `jj new <bookmark>` | **没有 jj co!** |
+| `git checkout -b <name>` | `jj new <base> -b <name>` | 创建并切换 |
+| `git branch` | `jj bookmark list` | 列出 |
+| `git branch <name>` | `jj bookmark create <name>` | 创建 |
+| `git branch -d <name>` | `jj bookmark delete <name>` | 删除 |
+| `git branch -f <name> <rev>` | `jj bookmark move <name> --to <rev>` | 移动 |
 
-**注意**：jj 的 bookmarks 是轻量指针，不是 Git branch 的完全等价物。
+**关键点**：
+- jj 没有 `jj co` 或 `jj checkout` 命令！
+- 用 `jj new <bookmark>` 创建新 change 并切换到它
+- 用 `jj edit <revision>` 在 working copy 中编辑某 commit
 
 ## 变基与合并
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git merge <A>` | `jj new @ <A>` | 合并（创建新 change） |
-| `git rebase <B> <A>` | `jj rebase -b <A> -o <B>` | 变基 |
-| `git rebase --onto B A^ <branch>` | `jj rebase -s A -o B` | 变基到新基础 |
-| `git rebase -i` | `jj rebase -r` | 交互式变基 |
+| `git merge <A>` | `jj new @ A` | 合并（创建新 change） |
+| `git rebase <B> <A>` | `jj rebase -b A -o B` | 移动 bookmark |
+| `git rebase --onto B A^ <branch>` | `jj rebase -s A -o B` | 移动 commit 及后代 |
+
+**关键区别**：
+- `-b` = 移动 bookmark 指向的 commit
+- `-s` = 移动指定 commit 及其所有后代
 
 ## 远程操作
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
 | `git fetch` | `jj git fetch` | 拉取 |
-| `git pull` | `jj git fetch` (+ `jj new`) | 拉取后创建新 change |
+| `git pull` | `jj git fetch` (+ `jj new`) | |
 | `git push` | `jj git push` | 推送 |
-| `git push <remote> <branch>` | `jj git push --bookmark <name>` | 推送特定 bookmark |
-| `git remote add <name> <url>` | `jj git remote add <name> <url>` | 添加远程 |
+| `git push <remote> <branch>` | `jj git push --bookmark <name>` | |
+| `git remote add` | `jj git remote add` | |
 
 ## 暂存与撤销
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git stash` | `jj shelf` | 暂存当前变更 |
-| `git stash pop` | `jj shelf unapply` | 恢复暂存 |
+| `git stash` | `jj new @-` | 暂存到兄弟 commit |
+| `git stash pop` | `jj edit <commit>` | 恢复 |
 | `git reset --hard` | `jj abandon` | 放弃当前 change |
-| `git reset --soft HEAD~` | `jj squash --from @-` | 保留修改并新建 change |
+| `git reset --soft HEAD~` | `jj squash --from @-` | 保留修改 |
 | `git cherry-pick <rev>` | `jj duplicate <rev> -o @` | 复制提交 |
 
 ## 撤销操作
@@ -77,13 +83,23 @@
 | `git reflog` | `jj op log` | 查看操作日志 |
 | `git reset --hard <ref>` | `jj undo` | 撤销上一次操作 |
 
-**jj 的 `jj undo` 比 Git 的 reset 更强大**，可以撤销几乎任何操作。
+**jj 的 `jj undo` 更强大** — 可以撤销几乎任何操作！
 
 ## 文件操作
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git ls-files` | `jj file list` | 列出跟踪的文件 |
-| `git rm <file>` | `jj file delete <file>` | 删除文件 |
-| `git rm --cached <file>` | `jj file untrack <file>` | 取消跟踪 |
+| `git ls-files` | `jj file list` | 列出文件 |
+| `git rm <file>` | `jj file delete <file>` | 删除 |
+| `git rm --cached <file>` | `jj file untrack <file>` | 取消跟踪（需匹配 ignore pattern） |
 | `git rev-parse --show-toplevel` | `jj workspace root` | 仓库根目录 |
+
+## 高级操作
+
+| Git | Jujutsu | 说明 |
+|-----|---------|------|
+| `git add -p` | `jj split` | 交互式拆分 |
+| `git rebase -i` | `jj rebase -r` | 交互式变基 |
+| | `jj absorb` | 自动吸收修改到之前的 commit |
+| | `jj diffedit` | 交互式编辑某 commit 的 diff |
+| | `jj describe` | 修改 commit 信息 |
