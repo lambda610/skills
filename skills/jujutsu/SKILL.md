@@ -1,6 +1,6 @@
 ---
 name: jujutsu
-description: Use Jujutsu (jj) for version control in jj-enabled projects. Covers command workflows, bookmark management, rebasing, conflict resolution, revsets, and common pitfalls. Triggers when: project has a `.jj/` directory, README requires jj, or user explicitly requests jj commands. Do NOT use for regular git-only projects.
+description: "Use Jujutsu (jj) for version control in jj-enabled projects. Covers command workflows, bookmark management, rebasing, conflict resolution, revsets, and common pitfalls. Triggers when: project has a `.jj/` directory, README requires jj, or user explicitly requests jj commands. Do NOT use for regular git-only projects."
 ---
 
 # Jujutsu Usage Guide
