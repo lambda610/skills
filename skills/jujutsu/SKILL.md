@@ -27,6 +27,7 @@ Jujutsu (jj) 是新一代分布式版本控制工具，兼容 Git 仓库但用�
 | 用 branch 管理分支 | jj 用 bookmarks，是轻量指针 |
 | `git stash` 暂存 | 用 `jj new @-` 或 `jj shelf` |
 | 冲突必须立即解决 | jj 冲突可延迟处理 |
+| checkout 切换分支 | 用 `jj new` 或 `jj edit`（无 checkout） |
 
 ### ✅ 正确的心智模型
 
@@ -36,6 +37,33 @@ Jujutsu (jj) 是新一代分布式版本控制工具，兼容 Git 仓库但用�
 4. **Bookmarks** — 轻量标记，类似 Git branch 但有 tracked 概念
 5. **Revsets** — 强大的查询语法，能表达复杂条件
 6. **无 checkout** — 用 `jj new` 或 `jj edit` 切换
+7. **冲突不阻塞** — 冲突记录在 commit 中，可稍后解决
+
+## 核心概念
+
+### Change vs Commit
+
+- **Commit**：文件的快照 + 元数据（作者、日期、父提交）
+- **Change**：commit 的演化历史，用 change ID 标识（类似 Gerrit 的 Change-Id）
+- **Working-copy commit**：当前工作目录对应的 commit（@ 符号）
+
+### Change ID vs Commit ID
+
+- **Change ID**：jj 特有，16 字节随机生成，格式如 `kntqzsqt`，会保持不变
+- **Commit ID**：Git 兼容的提交哈希，会随内容变化
+
+### Bookmark vs Branch
+
+- **Bookmark**：指向 commit 的命名指针，类似 Git branch
+- **无"当前 bookmark"** — jj 没有活跃分支的概念
+- **Tracked bookmark**：跟踪远程同名 bookmark
+
+### Colocated Workspaces
+
+jj 和 git 可共存于同一目录：
+- `.jj/` + `.git/` 共存
+- jj 和 git 命令可混用
+- jj 自动 import/export 到 git
 
 ## 常用命令速查
 
@@ -61,6 +89,7 @@ jj bookmark list         # 列出 bookmarks
 jj bookmark create <name> -r <revision>  # 创建 bookmark
 jj bookmark delete <name>  # 删除 bookmark
 jj bookmark move <name> --to <revision>  # 移动 bookmark
+jj bookmark track <name> --remote=<remote>  # 跟踪远程 bookmark
 
 # 变基
 jj rebase -b <bookmark> -o <dest>  # 移动 bookmark 及其指向的 commit
@@ -74,6 +103,10 @@ jj git push --bookmark <name>  # 推送特定 bookmark
 # 撤销
 jj undo                  # 撤销上一次操作
 jj op log                # 查看操作日志
+
+# 多远程
+jj config set --repo git.fetch '["upstream", "origin"]'
+jj bookmark track main  # 跟踪远程 bookmark
 ```
 
 ## 常见工作流
@@ -103,7 +136,7 @@ jj squash
 jj squash --into <commit>
 ```
 
-### 创建新分支（在某 bookmark 上开始工作）
+### 创建新分支
 ```bash
 # 相当于 git checkout -b topic main
 jj new main
@@ -145,16 +178,17 @@ jj new @-
 # 恢复：用 jj edit <commit> 回到之前的 commit
 ```
 
-### 与远程同步
+### Divergent Changes（分叉变化）
+
+当同一 change ID 有多个可见 commit 时：
 ```bash
-# 拉取
-jj git fetch
+# 查看
+jj log  # 显示 divergent 标记
 
-# 如果有远程更新，先 fetch
-jj git fetch
-
-# 推送
-jj git push
+# 解决策略
+jj abandon <unwanted-commit-id>  # 放弃一个
+jj metaedit --update-change-id <commit-id>  # 生成新 change ID
+jj squash --from <source> --into <target>  # 合并两个
 ```
 
 ## 关键命令对照
@@ -173,9 +207,7 @@ jj git push
 | `git rebase B A` | `jj rebase -b A -o B` | |
 | `git stash` | `jj new @-` | |
 | `git reset --hard` | `jj abandon` | |
-| `git reset --soft HEAD~` | `jj squash --from @-` | |
-
-**注意**：jj 没有 `jj co` 或 `jj checkout` 命令！
+| `git reflog` | `jj op log` | |
 
 ## 注意事项
 
@@ -214,3 +246,5 @@ jj log -r main..        # main 分支后的 commit
 jj help
 jj help <subcommand>
 ```
+
+更多内容：见 `references/` 目录

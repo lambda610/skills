@@ -132,6 +132,33 @@ echo "file.txt" >> .gitignore
 jj file untrack file.txt
 ```
 
+### 混淆 bookmarks 和 changes
+
+**误解**：bookmark 就是 branch
+
+**正确**：
+- **Bookmark**：类似 Git branch，是指向提交的指针
+- **Change**：jj 核心概念，是可编辑的提交
+- **Working-copy commit**：当前工作目录的 commit（@ 符号）
+- **无"当前 bookmark"** — jj 没有活跃分支的概念
+
+### 忽略 divergent changes
+
+**误解**：只要用 change ID 就不会有歧义
+
+**正确**：如果 change ID 分叉了，需要用 commit ID 或带偏移的 change ID
+
+```bash
+# 分叉的 change ID
+jj log  # 显示为 xyz/0, xyz/1
+
+# 用 commit ID 指定
+jj edit <commit-id>
+
+# 或用带偏移的 change ID
+jj edit xyz/0
+```
+
 ## 🟡 小问题
 
 ### 忘记 `-m` 参数
@@ -139,12 +166,6 @@ jj file untrack file.txt
 **问题**：`jj commit` 不带 `-m` 会打开编辑器
 
 **建议**：习惯用 `jj commit -m "message"`
-
-### 混淆 bookmarks 和 changes
-
-- **Bookmark**：类似 Git branch，是指向提交的指针
-- **Change**：jj 核心概念，是可编辑的提交
-- **Working-copy commit**：当前工作目录的 commit（@ 符号）
 
 ### 在 Git 项目中直接用 `git init`
 
@@ -157,6 +178,20 @@ jj git init
 jj git clone <url>
 ```
 
+### 混淆 tracked vs untracked bookmarks
+
+**误解**：fetch 后自动跟踪
+
+**正确**：
+```bash
+# 默认只跟踪 origin 的 main
+# 其他需要手动 track
+jj bookmark track <name> --remote=<remote>
+
+# 查看tracked
+jj bookmark list --tracked
+```
+
 ## 检查清单
 
 操作前快速检查：
@@ -167,3 +202,4 @@ jj git clone <url>
 - [ ] 用 `jj new @ A` 而不是 `git merge`
 - [ ] 用 `jj rebase -b` 或 `-s` 变基
 - [ ] 用 `jj new @-` 暂存而不是 `git stash`
+- [ ] 分叉的 change ID 需要用 commit ID 明确指定
