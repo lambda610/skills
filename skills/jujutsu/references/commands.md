@@ -53,7 +53,7 @@
 | `git rebase --onto B A^ <branch>` | `jj rebase -s A -o B` | 移动 commit 及后代 |
 
 **关键区别**：
-- `-b` = 移动 bookmark 指向的 commit
+- `-b` = 移动 bookmark 指向的 commit（不包含后代）
 - `-s` = 移动指定 commit 及其所有后代
 
 ## 远程操作
@@ -65,6 +65,7 @@
 | `git push` | `jj git push` | 推送 |
 | `git push <remote> <branch>` | `jj git push --bookmark <name>` | |
 | `git remote add` | `jj git remote add` | |
+| `git branch -u <remote>/<branch>` | `jj bookmark track <name> --remote=<remote>` | 跟踪远程 |
 
 ## 暂存与撤销
 
@@ -103,3 +104,4 @@
 | | `jj absorb` | 自动吸收修改到之前的 commit |
 | | `jj diffedit` | 交互式编辑某 commit 的 diff |
 | | `jj describe` | 修改 commit 信息 |
+| | `jj evolog` | 查看 change 的演化历史 |
