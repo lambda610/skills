@@ -1,6 +1,6 @@
 # 常见错误与陷阱
 
-> Agent 容易犯的错误，按严重程度排序。
+> 基于官方文档，Agent 容易犯的错误。
 
 ## 🔴 严重错误
 
@@ -8,49 +8,79 @@
 
 **错误**：想暂存文件时用 `git add`
 
-**问题**：jj 没有暂存区概念，`git add` 不会生效（除非在 git 兼容模式）
+**问题**：jj 没有暂存区概念，`git add` 不会生效
 
 **正确做法**：
 ```bash
 # jj 自动追踪所有修改，直接提交即可
 jj commit -m "message"
 
-# 如果只想提交部分文件，用 jj split 或 jj diffedit
-jj diffedit -r @
+# 如果只想提交部分文件，用 jj split
+jj split file1 file2
 ```
 
-### 用 `git checkout` 切换分支
+### 用 `jj co` 或 `jj checkout` 切换
 
-**错误**：用 `git checkout <bookmark>` 切换分支
+**错误**：用 `jj co <bookmark>` 或 `jj checkout`
 
-**问题**：jj 用 `jj co` 或 `jj edit`
+**问题**：jj 根本没有这两个命令！
 
 **正确做法**：
 ```bash
-jj co <bookmark>
-# 或
-jj edit <bookmark>
+# 创建新 change 在 bookmark 上（相当于 checkout -b）
+jj new main
+
+# 创建新 change 并设置 bookmark
+jj new main -b myfeature
+
+# 编辑现有 commit
+jj edit <revision>
 ```
 
 ### 用 `git stash` 暂存
 
-**错误**：用 `git stash` 暂存改动
+**错误**：用 `git stash`
 
-**问题**：jj 用 shelf
+**问题**：jj 没有 stash，用 `jj new @-` 创建兄弟 commit
 
 **正确做法**：
 ```bash
-# 暂存当前改动
-jj shelf
+# 临时保存当前工作（创建兄弟 commit）
+jj new @-
 
-# 恢复暂存
-jj shelf unapply
+# 恢复：用 jj edit 回到原 commit
+jj edit <原commit>
+```
 
-# 查看暂存列表
-jj shelf list
+### 用 `git merge`
+
+**错误**：用 `jj merge`
+
+**问题**：jj 没有 merge 命令
+
+**正确做法**：
+```bash
+# 合并 A 到当前 commit
+jj new @ A
 ```
 
 ## 🟠 易错操作
+
+### 混淆 `-b` 和 `-s` 在 rebase
+
+**误解**：`-b` 移动单个 commit
+
+**正确**：
+- `-b <bookmark>`：移动 bookmark 指向的 commit（不包含后代）
+- `-s <commit>`：移动 commit 及其所有后代
+
+```bash
+# 错误
+jj rebase -b A -o B  # 移动 A（不含后代）
+
+# 正确（移动 A 及其后代）
+jj rebase -s A -o B
+```
 
 ### `jj new` 不带参数
 
@@ -69,38 +99,37 @@ jj new -b <bookmark>
 jj new <revision>
 ```
 
-### `jj rebase` 参数顺序
+### 冲突后不知如何继续
 
-**误解**：先写源后写目标（像 git 那样）
+**误解**：遇到冲突必须立即解决
 
-**正确**：jj 用 `-b` 指定要移动的 bookmark，`-o` 指定目标位置
-
-```bash
-# 错误
-jj rebase A B  # ❌
-
-# 正确
-jj rebase -b A -o B  # ✅ 把 A 变基到 B 上
-```
-
-### 冲突后继续操作
-
-**误解**：遇到冲突必须解决才能继续
-
-**正确**：jj 允许先继续工作，稍后再解决冲突
+**正确**：jj 允许先继续工作，稍后再解决
 
 ```bash
-# 冲突后，先查看状态
-jj st
-
-# 创建新 change 继续工作（冲突会保留在原 change）
+# 冲突后，jj 会创建 conflicted change
+# 可以继续创建新 commit
 jj new
 
-# 之后回到冲突的 change，解决后再 squash
-jj co <conflict-change>
-# 解决冲突文件
+# 之后回到冲突 commit 解决
+jj new <conflicted-commit>
+# 解决文件中的冲突
 jj resolve <file>
 jj squash
+```
+
+### 用 `jj file untrack` 但不设置 ignore
+
+**错误**：直接 `jj file untrack`
+
+**问题**：文件必须匹配 ignore pattern 才能 untrack
+
+**正确做法**：
+```bash
+# 1. 先添加到 .gitignore
+echo "file.txt" >> .gitignore
+
+# 2. 再 untrack
+jj file untrack file.txt
 ```
 
 ## 🟡 小问题
@@ -114,26 +143,27 @@ jj squash
 ### 混淆 bookmarks 和 changes
 
 - **Bookmark**：类似 Git branch，是指向提交的指针
-- **Change**：jj 的核心概念，是可编辑的提交
+- **Change**：jj 核心概念，是可编辑的提交
+- **Working-copy commit**：当前工作目录的 commit（@ 符号）
 
+### 在 Git 项目中直接用 `git init`
+
+**问题**：应该用 `jj git init`
+
+**正确**：
+```bash
+jj git init
+# 或
+jj git clone <url>
 ```
-@ → 当前工作的 change
-HEAD → 当前 checkout 的 bookmark 指向的提交
-```
-
-### 用 Git 命令
-
-**提醒**：在 jj 项目中尽量用 jj 命令。虽然 jj 兼容 git 操作，但：
-- `jj git init` 初始化 `.jj/` 目录
-- `jj git clone` 正确设置 jj 环境
-- 直接用 `git init` 可能导致 jj 无法识别
 
 ## 检查清单
 
 操作前快速检查：
 - [ ] 不要用 `git add`
+- [ ] 不要用 `jj co` 或 `jj checkout`
 - [ ] 用 `jj commit` 而不是 `git commit`
-- [ ] 用 `jj co` 而不是 `git checkout`
 - [ ] 用 `jj bookmark` 而不是 `git branch`
-- [ ] 用 `jj rebase -b -o` 而不是 `git rebase`
-- [ ] 用 `jj shelf` 而不是 `git stash`
+- [ ] 用 `jj new @ A` 而不是 `git merge`
+- [ ] 用 `jj rebase -b` 或 `-s` 变基
+- [ ] 用 `jj new @-` 暂存而不是 `git stash`
