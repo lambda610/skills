@@ -71,15 +71,19 @@ jj new @ A
 **误解**：`-b` 移动单个 commit
 
 **正确**：
-- `-b <bookmark>`：移动 bookmark 指向的 commit（不包含后代）
+- `-b <bookmark>`：移动整个分支（包含祖先，不含 destination 的祖先）
 - `-s <commit>`：移动 commit 及其所有后代
+- `-r <commit>`：只移动指定的 commit（不含后代）
 
 ```bash
-# 错误
-jj rebase -b A -o B  # 移动 A（不含后代）
-
-# 正确（移动 A 及其后代）
+# 移动 A 及其后代
 jj rebase -s A -o B
+
+# 移动整个分支
+jj rebase -b bookmark -o main
+
+# 只移动单个 commit
+jj rebase -r A -o B
 ```
 
 ### `jj new` 不带参数

@@ -25,9 +25,9 @@ Jujutsu (jj) 是新一代分布式版本控制工具，兼容 Git 仓库但用�
 | `git add` | jj 无暂存区，不需要 add |
 | commit 后不能改 | jj 的 commit 是可编辑的 change |
 | 用 branch 管理分支 | jj 用 bookmarks，是轻量指针 |
-| `git stash` 暂存 | 用 `jj new @-` 或 `jj shelf` |
+| `git stash` 暂存 | 用 `jj new @-` |
 | 冲突必须立即解决 | jj 冲突可延迟处理 |
-| checkout 切换分支 | 用 `jj new` 或 `jj edit`（无 checkout） |
+| checkout 切换 | 用 `jj edit`（无 checkout） |
 
 ### ✅ 正确的心智模型
 
@@ -36,7 +36,7 @@ Jujutsu (jj) 是新一代分布式版本控制工具，兼容 Git 仓库但用�
 3. **操作可撤销** — 几乎所有操作都能用 `jj undo` 撤销
 4. **Bookmarks** — 轻量标记，类似 Git branch 但有 tracked 概念
 5. **Revsets** — 强大的查询语法，能表达复杂条件
-6. **无 checkout** — 用 `jj new` 或 `jj edit` 切换
+6. **无 checkout** — 用 `jj edit` 切换到某 commit
 7. **冲突不阻塞** — 冲突记录在 commit 中，可稍后解决
 
 ## 核心概念
@@ -56,7 +56,7 @@ Jujutsu (jj) 是新一代分布式版本控制工具，兼容 Git 仓库但用�
 
 - **Bookmark**：指向 commit 的命名指针，类似 Git branch
 - **无"当前 bookmark"** — jj 没有活跃分支的概念
-- **Tracked bookmark**：跟踪远程同名 bookmark
+- **Tracked bookmark**：自动跟踪远程同名 bookmark
 
 ### Colocated Workspaces
 
@@ -80,11 +80,17 @@ jj commit -m "message"  # 提交（自动包含所有修改）
 jj squash               # 合并到父提交（类似 git commit --amend）
 jj restore <path>       # 撤销文件修改
 
-# 注意：没有 jj co 或 jj checkout！
-# 切换到某 bookmark：用 jj new <bookmark>
-# 编辑某 commit：用 jj edit <revision>
+# ⚠️ 没有 checkout！
+# 切换到某 commit 编辑：用 jj edit <revision>
+# 创建新 change：用 jj new
 
-# Bookmarks（类似 branch，但不同）
+# 创建与切换
+jj new                  # 创建新 empty change（当前 @ 的子提交）
+jj new <revision>       # 基于某 revision 创建新 change
+jj new -b <bookmark>   # 创建新 change 并设置 bookmark
+jj edit <revision>      # 切换到某 commit 进行编辑（类似 checkout）
+
+# Bookmarks
 jj bookmark list         # 列出 bookmarks
 jj bookmark create <name> -r <revision>  # 创建 bookmark
 jj bookmark delete <name>  # 删除 bookmark
@@ -92,8 +98,9 @@ jj bookmark move <name> --to <revision>  # 移动 bookmark
 jj bookmark track <name> --remote=<remote>  # 跟踪远程 bookmark
 
 # 变基
-jj rebase -b <bookmark> -o <dest>  # 移动 bookmark 及其指向的 commit
+jj rebase -b <bookmark> -o <dest>  # 移动整个分支
 jj rebase -s <commit> -o <dest>    # 移动 commit 及其后代
+jj rebase -r <commit> -o <dest>    # 只移动指定 commit
 
 # 远程操作
 jj git fetch             # 拉取
@@ -105,8 +112,8 @@ jj undo                  # 撤销上一次操作
 jj op log                # 查看操作日志
 
 # 多远程
-jj config set --repo git.fetch '["upstream", "origin"]'
-jj bookmark track main  # 跟踪远程 bookmark
+jj config set --user git.fetch '["upstream", "origin"]'
+jj bookmark track main --remote=origin  # 跟踪 origin/main
 ```
 
 ## 常见工作流
@@ -136,22 +143,30 @@ jj squash
 jj squash --into <commit>
 ```
 
+### 编辑现有 commit（类似 git checkout）
+```bash
+# 切换到某 commit 进行编辑
+jj edit <revision>
+
+# 之后的所有修改都会 amend 这个 commit
+```
+
 ### 创建新分支
 ```bash
-# 相当于 git checkout -b topic main
-jj new main
-jj bookmark create topic
-# 或者一步到位：
+# 创建新 change 并设置 bookmark
 jj new main -b topic
 ```
 
 ### 变基
 ```bash
-# 移动 bookmark A 到 B 上（类似 git rebase）
-jj rebase -b A -o B
+# 移动整个分支（包含所有后代）
+jj rebase -b topic -o main
 
-# 移动 commit 及其后代到新基础
+# 移动单个 commit 及其后代
 jj rebase -s <commit> -o <dest>
+
+# 只移动单个 commit（不包含后代）
+jj rebase -r <commit> -o <dest>
 ```
 
 ### 处理冲突
@@ -200,19 +215,24 @@ jj squash --from <source> --into <target>  # 合并两个
 | `git add` | ❌ 不需要 | jj 自动追踪 |
 | `git commit` | `jj commit -m "msg"` | |
 | `git commit --amend` | `jj squash` | |
-| `git checkout <branch>` | `jj new <bookmark>` | **没有 jj co!** |
-| `git checkout -b <name>` | `jj new <base> -b <name>` | |
+| `git checkout <commit>` | `jj edit <revision>` | **切换到某 commit 编辑** |
+| `git checkout -b <name>` | `jj new <base> -b <name>` | 创建并设置 bookmark |
 | `git branch` | `jj bookmark list` | |
-| `git merge A` | `jj new @ A` | |
-| `git rebase B A` | `jj rebase -b A -o B` | |
+| `git switch <branch>` | `jj new <bookmark>` | **创建新 change** |
+| `git merge A` | `jj new @ A` | 创建 merge commit |
+| `git rebase A B` | `jj rebase -s A -o B` | A 及其后代移到 B 上 |
 | `git stash` | `jj new @-` | |
 | `git reset --hard` | `jj abandon` | |
 | `git reflog` | `jj op log` | |
 
+**注意**：
+- `jj new` **不是** `git checkout`，而是创建新 change
+- `jj edit` 才是类似"切换到某 commit"的命令
+
 ## 注意事项
 
 1. **不要用 `git add`** — jj 自动追踪
-2. **不要用 `jj co`** — 用 `jj new` 或 `jj edit`
+2. **没有 checkout** — 用 `jj edit` 切换，用 `jj new` 创建
 3. **`jj commit` 自动包含所有修改** — 不需要 `-a`
 4. **冲突不阻塞** — 可以继续工作，稍后再解决
 5. **`jj new` 创建的是 change** — 是可编辑的空 commit
