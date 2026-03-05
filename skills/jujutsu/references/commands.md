@@ -32,8 +32,9 @@
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git checkout <branch>` | `jj new <bookmark>` | **没有 jj co!** |
-| `git checkout -b <name>` | `jj new <base> -b <name>` | 创建并切换 |
+| `git checkout <commit>` | `jj edit <revision>` | **切换到某 commit 编辑** |
+| `git checkout -b <name>` | `jj new <base> -b <name>` | 创建并设置 bookmark |
+| `git switch <branch>` | `jj new <bookmark>` | 创建新 change |
 | `git branch` | `jj bookmark list` | 列出 |
 | `git branch <name>` | `jj bookmark create <name>` | 创建 |
 | `git branch -d <name>` | `jj bookmark delete <name>` | 删除 |
@@ -41,20 +42,21 @@
 
 **关键点**：
 - jj 没有 `jj co` 或 `jj checkout` 命令！
-- 用 `jj new <bookmark>` 创建新 change 并切换到它
-- 用 `jj edit <revision>` 在 working copy 中编辑某 commit
+- 用 `jj edit <revision>` 切换到某 commit 进行编辑（类似 checkout）
+- 用 `jj new` 创建新 change（不是切换！）
 
 ## 变基与合并
 
 | Git | Jujutsu | 说明 |
 |-----|---------|------|
-| `git merge <A>` | `jj new @ A` | 合并（创建新 change） |
-| `git rebase <B> <A>` | `jj rebase -b A -o B` | 移动 bookmark |
-| `git rebase --onto B A^ <branch>` | `jj rebase -s A -o B` | 移动 commit 及后代 |
+| `git merge <A>` | `jj new @ A` | 合并（创建新 merge commit） |
+| `git rebase A B` | `jj rebase -s A -o B` | A 及其后代移到 B 上 |
+| `git rebase --onto B A^ <branch>` | `jj rebase -s A -o B` | 同上 |
 
 **关键区别**：
-- `-b` = 移动 bookmark 指向的 commit（不包含后代）
+- `-b` = 移动整个分支（包含祖先，不含 destination 的祖先）
 - `-s` = 移动指定 commit 及其所有后代
+- `-r` = 只移动指定的 commit（不含后代）
 
 ## 远程操作
 
